@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserController">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.UserController">
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT">
             <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>

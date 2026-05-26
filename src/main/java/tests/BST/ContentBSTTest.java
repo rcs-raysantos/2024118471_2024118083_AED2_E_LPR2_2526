@@ -189,29 +189,30 @@ public class ContentBSTTest {
         Movie inception = new Movie(
             "Inception",
             LocalDate.of(2010, 7, 16),
-            148, "Um ladrão que rouba segredos através dos sonhos."
+            148, "Um ladrão que rouba segredos através dos sonhos.",
+                2323, 1
         );
-        inception.setGenres(List.of(new Genre("Sci-Fi")));
 
         Movie interstellar = new Movie(
             "Interstellar",
             LocalDate.of(2014, 11, 7),
-            169, "Uma equipa viaja por um buraco de minhoca."
+            169, "Uma equipa viaja por um buraco de minhoca.",
+                6452, 67
         );
-        interstellar.setGenres(List.of(new Genre("Sci-Fi")));
 
         Series breakingBad = new Series(
             "Breaking Bad",
             LocalDate.of(2008, 1, 20),
-            60, "Um professor de química torna-se traficante."
+            60, "Um professor de química torna-se traficante.",
+                6, 25
         );
-        breakingBad.setGenres(List.of(new Genre("Drama")));
+
         Documentary planetEarth = new Documentary(
             "Planet Earth II",
             LocalDate.of(2016, 11, 6),
-            60, "Documentário sobre a vida selvagem."
+            60, "Documentário sobre a vida selvagem.",
+                "nature", "john cena"
         );
-        planetEarth.setGenres(List.of(new Genre("Nature")));
 
         bst.insert(inception);
         bst.insert(interstellar);
