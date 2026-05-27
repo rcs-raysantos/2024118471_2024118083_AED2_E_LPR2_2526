@@ -19,7 +19,7 @@ public class MainJFX extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("users_view.fxml"));
         Scene scene = new Scene(root);
 
-        primaryStage.setTitle("Projeto AED e LPR 2");
+        primaryStage.setTitle("Projeto de AED2 e LPR2");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
