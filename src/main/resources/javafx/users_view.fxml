@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.UserController">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UserController" stylesheets="@style.css">
+
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT">
             <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
@@ -36,7 +37,8 @@
     <right>
         <VBox spacing="10" prefWidth="250">
             <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-            <Label text="Registar / Editar Utilizador" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+
+            <Label text="Registar / Editar Utilizador" styleClass="label-header"/>
 
             <Label text="Nome:"/>
             <TextField fx:id="txtFormNome"/>
@@ -54,9 +56,21 @@
             <DatePicker fx:id="dpFormNascimento"/>
 
             <HBox spacing="10" alignment="CENTER">
-                <Button text="Salvar" onAction="#handleSalvar" style="-fx-background-color: #2ecc71; -fx-text-fill: white;"/>
-                <Button text="Remover" onAction="#handleRemover" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                <Button text="Salvar" onAction="#handleSalvar" styleClass="button-primary"/>
+                <Button text="Remover" onAction="#handleRemover" styleClass="button-danger"/>
             </HBox>
         </VBox>
     </right>
+
+    <bottom>
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+            <Label text="Persistência de Dados (R10):" style="-fx-text-fill: #8197a4; -fx-font-style: italic;"/>
+
+            <Button text="Importar Dados (.txt)" onAction="#handleImportarDados" styleClass="button-secondary"/>
+            <Button text="Exportar Dados (.txt)" onAction="#handleExportarDados" styleClass="button-primary"/>
+        </HBox>
+    </bottom>
+
 </BorderPane>

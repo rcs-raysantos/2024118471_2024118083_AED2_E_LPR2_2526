@@ -14,5 +14,7 @@ module edu.ufp.inf.aed2_lp2_2324_students {
 
     opens javafx to javafx.fxml;
     exports javafx;
+    exports javafx.controller;
+    opens javafx.controller to javafx.fxml;
 
 }

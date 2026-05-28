@@ -1,16 +1,21 @@
-package javafx;
+package javafx.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import model.graph.StreamingGraph;
 import model.users.User;
 import model.utilities.Region;
 import service.bst.UserBST;
 import service.st.UserST;
 import tests.DataInitializer;
+import admin.DataStorageManager;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserController {
@@ -30,13 +35,15 @@ public class UserController {
     private UserBST userBST;
     private ObservableList<User> obsUsers;
 
+    private StreamingGraph streamingGraph;
+
     @FXML
     public void initialize() {
-        // 1. Inicializar as tuas tabelas/árvores (reutilizando o teu DataInitializer)
+        // inicializa as árvores
         userST = DataInitializer.user_buildST();
         userBST = DataInitializer.user_buildBST();
 
-        // 2. Configurar as colunas da Tabela para lerem os atributos do User
+        // configura as colunas da tabela para ler os atributos do User/Person
         colId.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(cellData.getValue().getId()));
         colNome.setCellValueFactory(cellData ->
@@ -153,6 +160,77 @@ public class UserController {
             atualizarTabela(userST.listAll());
         } catch (IllegalArgumentException e) {
             mostrarAlerta("Erro", "Não foi possível remover", e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    // Métodos para ficheiros
+    public void handleExportarDados() {
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("Ficheiros de Texto", "*.txt"));
+        File file = fileChooser.showSaveDialog(tblUsers.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                // Pegamos na lista completa de utilizadores atual
+                List<User> listaUtilizadores = userST.listAll(); // ou a estrutura que usas para listar
+                List<String> historicoPesquisas = obterHistoricoDePesquisas(); // Lista de strings das tuas queries
+
+                DataStorageManager.exportData(file, listaUtilizadores, streamingGraph, historicoPesquisas);
+
+                System.out.println("Dados exportados com sucesso!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private List<String> historicoPesquisas = new ArrayList<>();
+
+    private void carregarHistoricoPesquisas(List<String> pesquisas) {
+        historicoPesquisas.clear();
+
+        if (pesquisas != null) {
+            historicoPesquisas.addAll(pesquisas);
+        }
+    }
+
+    private List<String> obterHistoricoDePesquisas() {
+        return historicoPesquisas;
+    }
+
+    public void handleImportarDados() {
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("Ficheiros de Texto", "*.txt"));
+        File file = fileChooser.showOpenDialog(tblUsers.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                List<User> utilizadoresImportados = new ArrayList<>();
+
+                // O manager lê o ficheiro, limpa o grafo antigo e injeta os novos vértices/arestas
+                List<String> pesquisasImportadas = DataStorageManager.importData(file, streamingGraph, utilizadoresImportados);
+
+                // !! REPOPULAR AS TUAS TABELAS DE SÍMBOLOS (ST e BST) !!
+                // Primeiro limpamos as STs antigas
+                userST.clear();  // Adapta para o método de limpar da tua ST
+                userBST.clear(); // Adapta para o método de limpar da tua BST
+
+                // Injetamos os utilizadores importados de volta nas tuas STs
+                for (User u : utilizadoresImportados) {
+                    userST.insert(u);   // Substitui pelo teu método de inserção (ex: .put ou .insert)
+                    userBST.insert(u);
+                }
+
+                // Atualizar a TableView do JavaFX na hora
+                atualizarTabela(userST.listAll());
+
+                // Atualizar o teu histórico de pesquisas guardado na aplicação
+                carregarHistoricoPesquisas(pesquisasImportadas);
+
+                System.out.println("Tudo populado com sucesso a partir do ficheiro!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
