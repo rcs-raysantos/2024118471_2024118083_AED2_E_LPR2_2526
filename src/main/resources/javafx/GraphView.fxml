@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.GraphController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <Button onAction="#handleDesenhar" styleClass="button-primary" text="Desenhar Grafo" />
+            <Button onAction="#handleLimpar" styleClass="button-danger" text="Limpar" />
+        </HBox>
+    </top>
+
+    <center>
+        <HBox alignment="CENTER" style="-fx-background-color: #0f171e;" BorderPane.alignment="CENTER">
+            <Canvas fx:id="graphCanvas" height="700" width="1000" />
+        </HBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="10" left="15" right="15" top="15" /></padding>
+            <Label style="-fx-text-fill: #8197a4; -fx-font-style: italic;" />
+            <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Grafo (.txt)" />
+            <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Grafo (.txt)" />
+        </HBox>
+    </bottom>
+
+</BorderPane>

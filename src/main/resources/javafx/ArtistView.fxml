@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="javafx.controller.ArtistController"
+            stylesheets="@style.css"
+            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+    <children>
+        <BorderPane AnchorPane.topAnchor="10.0" AnchorPane.bottomAnchor="10.0"
+                    AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+
+            <top>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <padding><Insets bottom="10" left="5" right="5" top="5"/></padding>
+                    <Label text="Nome:"/>
+                    <TextField fx:id="txtFiltroArtistNome" promptText="Procurar artista..."/>
+                    <Label text="País:"/>
+                    <TextField fx:id="txtFiltroArtistPais" prefWidth="80" promptText="Ex: US, PT"/>
+                    <Button text="Filtrar" onAction="#handleFiltrar" styleClass="button-secondary"/>
+                    <Button text="Limpar" onAction="#handleLimparFiltros" styleClass="button-secondary"/>
+                </HBox>
+            </top>
+
+            <center>
+                <TableView fx:id="tblArtists" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn fx:id="colArtistId" text="ID" prefWidth="100"/>
+                        <TableColumn fx:id="colArtistName" text="Nome" prefWidth="250"/>
+                        <TableColumn fx:id="colArtistCountry" text="País" prefWidth="150"/>
+                        <TableColumn fx:id="colArtistFollowers" text="Seguidores" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </center>
+
+            <right>
+                <VBox spacing="10" prefWidth="260" BorderPane.alignment="CENTER">
+                    <padding><Insets top="0" right="10" bottom="10" left="15"/></padding>
+
+                    <Label text="Registar / Editar Artista" styleClass="label-header"/>
+
+                    <Label text="ID do Artista:"/>
+                    <TextField fx:id="txtFormArtistId" promptText="Ex: art123"/>
+
+                    <Label text="Nome:"/>
+                    <TextField fx:id="txtFormArtistNome" promptText="Nome completo"/>
+
+                    <Label text="País (Código):"/>
+                    <TextField fx:id="txtFormArtistPais" promptText="Ex: PT, US, FR"/>
+
+                    <Label text="Número de Seguidores:"/>
+                    <TextField fx:id="txtFormArtistSeguidores" promptText="Ex: 5000"/>
+
+                    <HBox spacing="10" alignment="CENTER">
+                        <padding><Insets top="10"/></padding>
+                        <Button text="Salvar" onAction="#handleSalvar" styleClass="button-primary" prefWidth="110"/>
+                        <Button text="Remover" onAction="#handleRemover" styleClass="button-danger" prefWidth="110"/>
+                    </HBox>
+                </VBox>
+            </right>
+
+            <bottom>
+                <HBox spacing="15" alignment="CENTER_RIGHT" BorderPane.alignment="CENTER">
+                    <padding><Insets top="15" right="5" bottom="5" left="5"/></padding>
+                    <Label text="Persistência de Artistas (R10):" style="-fx-text-fill: #8197a4; -fx-font-style: italic;"/>
+                    <Button text="Importar Elenco (.txt)" onAction="#handleImportarDados" styleClass="button-secondary"/>
+                    <Button text="Exportar Elenco (.txt)" onAction="#handleExportarDados" styleClass="button-primary"/>
+                </HBox>
+            </bottom>
+
+        </BorderPane>
+    </children>
+</AnchorPane>
