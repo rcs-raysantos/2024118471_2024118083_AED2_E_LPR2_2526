@@ -1,6 +1,6 @@
 package service.st;
 
-import edu.princeton.cs.algs4.SeparateChainingHashST;
+import edu.princeton.cs.algs4.SeparateChainingHashST; // ordena alfabeticamente os ids
 import model.users.User;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.List;
  * @version 1.0
  */
 public class UserST {
-    private final SeparateChainingHashST<String, User> st; // estrutura: key = id, value = user
+    private SeparateChainingHashST<String, User> st; // estrutura: key = id, value = user
 
     // --------------------------- CONSTRUTOR ---------------------------
 
@@ -94,6 +94,10 @@ public class UserST {
         }
 
         st.put(id, uptaded_user);
+    }
+
+    public void clear() {
+        this.st = new SeparateChainingHashST<String, User>(); // substitui a velha pela nova
     }
 
     // --------------------------- UTILIDADES ---------------------------

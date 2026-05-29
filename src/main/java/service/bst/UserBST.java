@@ -16,7 +16,7 @@ import java.util.List;
  * @version 1.0
  */
 public class UserBST {
-    private final RedBlackBST<Date, List<User>> bst; // chave: data, key: lista de usuarios
+    private RedBlackBST<Date, List<User>> bst; // chave: data, key: lista de usuarios
 
     // --------------------------- CONSTRUTOR ---------------------------
 
@@ -201,6 +201,10 @@ public class UserBST {
         }
 
         return result;
+    }
+
+    public void clear(){
+        this.bst = new RedBlackBST<Date, List<User>>();
     }
 
     // --------------------------- UTILIDADES ---------------------------
