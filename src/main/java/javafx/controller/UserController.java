@@ -1,246 +1,284 @@
 package javafx.controller;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import model.graph.StreamingGraph;
+import javafx.stage.FileChooser;
+
+import model.artists.Artist;
 import model.users.User;
 import model.utilities.Region;
-import service.bst.UserBST;
-import service.st.UserST;
-import tests.DataInitializer;
 import admin.DataStorageManager;
+import model.graph.StreamingGraph;
+import model.graph.GraphEdge;
+import service.st.UserST;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserController {
+    private UserST userST;
+    private StreamingGraph streamingGraph;
+    private List<String> historicoPesquisas;
 
-    @FXML private TextField txtFiltroNome, txtFiltroRegiao, txtFormNome, txtFormEmail, txtFormRegiao;
-    @FXML private PasswordField txtFormSenha;
-    @FXML private DatePicker dpInicio, dpFim, dpFormNascimento;
-    @FXML private TableView<User> tblUsers; // Primeiro, garante que a tabela é de <User>
+    @FXML private TextField txtFiltroNome;
+    @FXML private TextField txtFiltroRegiao;
+    @FXML private DatePicker dpInicio;
+    @FXML private DatePicker dpFim;
+
+    @FXML private TableView<User> tblUsers;
     @FXML private TableColumn<User, String> colId;
     @FXML private TableColumn<User, String> colNome;
     @FXML private TableColumn<User, String> colEmail;
-    @FXML private TableColumn<User, Region> colRegiao;
+    @FXML private TableColumn<User, String> colRegiao;
     @FXML private TableColumn<User, LocalDate> colRegisto;
 
-    // As tuas estruturas lógicas
-    private UserST userST;
-    private UserBST userBST;
-    private ObservableList<User> obsUsers;
+    @FXML private TextField txtFormNome;
+    @FXML private TextField txtFormEmail;
+    @FXML private PasswordField txtFormSenha;
+    @FXML private TextField txtFormRegiao;
+    @FXML private DatePicker dpFormNascimento;
 
-    private StreamingGraph streamingGraph;
+    @FXML private TableView<model.content.Content> tblContent;
+    @FXML private TableColumn<model.content.Content, String> colContentId;
+    @FXML private TableColumn<model.content.Content, String> colContentTitulo;
+    @FXML private TableColumn<model.content.Content, Integer> colContentAno;
+
+    @FXML private TableView<Artist> tblArtists;
+    @FXML private TableColumn<Artist, String> colArtistId;
+    @FXML private TableColumn<Artist, String> colArtistNome;
+    @FXML private TableColumn<Artist, String> colArtistFuncao;
+
+    @FXML private TableView<GraphEdge> tblEdges;
+    @FXML private TableColumn<GraphEdge, String> colEdgeOrigem;
+    @FXML private TableColumn<GraphEdge, String> colEdgeDestino;
+    @FXML private TableColumn<GraphEdge, String> colEdgeTipo;
+    @FXML private TableColumn<GraphEdge, Double> colEdgePeso;
+    @FXML private TableColumn<GraphEdge, LocalDateTime> colEdgeData;
 
     @FXML
     public void initialize() {
-        // inicializa as árvores
-        userST = DataInitializer.user_buildST();
-        userBST = DataInitializer.user_buildBST();
+        // Instanciar o Core das tuas estruturas
+        userST = new UserST();
+        streamingGraph = new StreamingGraph();
+        historicoPesquisas = new ArrayList<>();
 
-        // configura as colunas da tabela para ler os atributos do User/Person
-        colId.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getId()));
-        colNome.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getName()));
-        colEmail.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEmail()));
-        colRegiao.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getRegion()));
-        colRegisto.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getRegistrationDate()));
+        // Configurar como as Tabelas extraem a informação dos Objetos (Mapeamento)
+        configurarColunasUtilizadores();
+        configurarColunasCatalogo();
+        configurarColunasGrafo();
 
-        atualizarTabela(userST.listAll());
+        // Carregar dados iniciais vazios na interface
+        atualizarTabelaUtilizadores(userST.listAll());
+        handleAtualizarGrafo();
+    }
 
-        tblUsers.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                preencherFormulario(newSelection);
-            }
+    private void configurarColunasUtilizadores() {
+        colId.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
+        colNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        colEmail.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
+        colRegiao.setCellValueFactory(cellData -> {
+            Region r = cellData.getValue().getRegion();
+            return new SimpleStringProperty(r != null ? r.getCode() : "N/A");
+        });
+        colRegisto.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRegistrationDate()));
+    }
+
+    private void configurarColunasCatalogo() {
+        colContentId.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
+        colContentTitulo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitle()));
+        colContentAno.setCellValueFactory(cellData -> {
+            LocalDate dataLancamento = cellData.getValue().getReleaseDate();
+            return new SimpleObjectProperty<>(dataLancamento != null ? dataLancamento.getYear() : null);
         });
     }
 
-    private void atualizarTabela(List<User> lista) {
-        obsUsers = FXCollections.observableArrayList(lista);
-        tblUsers.setItems(obsUsers);
+    private void configurarColunasArtistas() {
+        colArtistId.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
+        colArtistNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
+        colArtistFuncao.setCellValueFactory(cellData -> new SimpleStringProperty("Artista"));
+    }
+
+    private void configurarColunasGrafo() {
+        colEdgeOrigem.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFrom()));
+        colEdgeDestino.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTo()));
+
+        colEdgeTipo.setCellValueFactory(cellData -> new SimpleStringProperty(
+                cellData.getValue().getMetadata() != null ? cellData.getValue().getMetadata().getType().name() : "N/A"
+        ));
+
+        colEdgePeso.setCellValueFactory(cellData -> new SimpleObjectProperty<>(
+                cellData.getValue().getMetadata() != null ? cellData.getValue().getMetadata().getWeight() : 0.0
+        ));
+
+        colEdgeData.setCellValueFactory(cellData -> new SimpleObjectProperty<>(
+                cellData.getValue().getMetadata() != null ? cellData.getValue().getMetadata().getTimestamp() : null
+        ));
     }
 
     @FXML
-    private void handleFiltrar() {
-        String substring = txtFiltroNome.getText().trim();
-        String regiao = txtFiltroRegiao.getText().trim().toUpperCase();
-        LocalDate inicio = dpInicio.getValue();
-        LocalDate fM = dpFim.getValue();
-
-        if (inicio == null) inicio = LocalDate.of(2000, 1, 1);
-        if (fM == null) fM = LocalDate.now().plusYears(10); // cobre o futuro (2026+)
-
-        List<User> resultados;
-
-        if (!substring.isEmpty() && !regiao.isEmpty()) {
-            resultados = userBST.findByNameSubstringRegionAndDateRange(substring, regiao, inicio, fM);
-        } else if (!regiao.isEmpty()) {
-            resultados = userBST.findByRegionAndDateRange(regiao, inicio, fM);
-        } else {
-            resultados = userBST.findByRegistrationRange(inicio, fM);
-        }
-
-        atualizarTabela(resultados);
-    }
-
-    @FXML
-    private void handleLimparFiltros() {
-        txtFiltroNome.clear();
-        txtFiltroRegiao.clear();
-        dpInicio.setValue(null);
-        dpFim.setValue(null);
-        atualizarTabela(userST.listAll()); // Volta a mostrar tudo
-    }
-
-    @FXML
-    private void handleSalvar() {
+    public void handleSalvar() {
         try {
             String nome = txtFormNome.getText();
             String email = txtFormEmail.getText();
             String senha = txtFormSenha.getText();
-            String codRegiao = txtFormRegiao.getText().toUpperCase();
-            LocalDate nascimento = dpFormNascimento.getValue();
+            String codigoRegiao = txtFormRegiao.getText();
+            LocalDate dataNasc = dpFormNascimento.getValue();
 
-            // Validação simples de UI
-            if (nome.isEmpty() || email.isEmpty() || codRegiao.isEmpty() || nascimento == null) {
-                mostrarAlerta("Erro", "Campos Obrigatórios", "Por favor, preencha todos os campos.", Alert.AlertType.WARNING);
+            if (nome.isEmpty() || email.isEmpty() || codigoRegiao.isEmpty()) {
+                mostrarAlerta(Alert.AlertType.WARNING, "Campos Vazios", "Por favor, preencha todos os campos obrigatórios.");
                 return;
             }
 
-            Region regiao = new Region(codRegiao, codRegiao.equals("PT") ? "Portugal" : "Outro");
-            User selecionado = tblUsers.getSelectionModel().getSelectedItem();
+            // Criar a Região baseada no código digitado (ex: "PT")
+            Region regiao = new Region(codigoRegiao.toUpperCase(), codigoRegiao.toUpperCase());
 
-            if (selecionado == null) {
-                // Modo: INSERIR NOVO
-                User novo = new User(nome, email, senha, LocalDate.now(), regiao, nascimento);
-                userST.insert(novo);
-                userBST.insert(novo);
-                mostrarAlerta("Sucesso", "Utilizador Criado", "Inserido com sucesso!", Alert.AlertType.INFORMATION);
-            } else {
-                // Modo: EDITAR EXISTENTE
-                User editado = new User(nome, email, senha, selecionado.getRegistrationDate(), regiao, nascimento);
-                userST.edit(selecionado.getId(), editado);
+            // Instanciar o teu utilizador (Data de registo assume o dia de Hoje)
+            User novoUser = new User(nome, "Não Especificado", email, senha, LocalDate.now(), regiao, dataNasc);
 
-                userBST.remove(selecionado);
-                userBST.insert(editado);
-                mostrarAlerta("Sucesso", "Utilizador Atualizado", "Dados editados com sucesso!", Alert.AlertType.INFORMATION);
-            }
+            // Guardar na Symbol Table (Dicionário) e associar ao Grafo de Streaming
+            userST.insert(novoUser);
+            streamingGraph.addVertex(novoUser.getId());
 
+            // Forçar atualização do Grafo visual para o caso de haver arestas automáticas
+            handleAtualizarGrafo();
+
+            // Sincronizar Interface Gráfica
+            atualizarTabelaUtilizadores(userST.listAll());
             limparFormulario();
-            atualizarTabela(userST.listAll()); // Atualiza UI
 
-        } catch (IllegalArgumentException e) {
-            mostrarAlerta("Erro Lógico", "Falha na Operação", e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Utilizador registado com sucesso!");
+        } catch (Exception e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível registar: " + e.getMessage());
         }
     }
 
     @FXML
-    private void handleRemover() {
+    public void handleRemover() {
         User selecionado = tblUsers.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
-            mostrarAlerta("Aviso", "Nenhum Utilizador Selecionado", "Selecione alguém na tabela para remover.", Alert.AlertType.WARNING);
+            mostrarAlerta(Alert.AlertType.WARNING, "Seleção Inválida", "Selecione um utilizador na tabela para remover.");
             return;
         }
 
-        try {
-            userST.remove(selecionado.getId());
-            userBST.remove(selecionado);
+        userST.remove(selecionado.getId());
+        atualizarTabelaUtilizadores(userST.listAll());
+        handleAtualizarGrafo();
+        mostrarAlerta(Alert.AlertType.INFORMATION, "Removido", "Utilizador excluído do sistema.");
+    }
 
-            mostrarAlerta("Sucesso", "Utilizador Removido", "Removido de ambas as estruturas.", Alert.AlertType.INFORMATION);
-            limparFormulario();
-            atualizarTabela(userST.listAll());
-        } catch (IllegalArgumentException e) {
-            mostrarAlerta("Erro", "Não foi possível remover", e.getMessage(), Alert.AlertType.ERROR);
+    @FXML
+    public void handleFiltrar() {
+        String filtroNome = (txtFiltroNome.getText() != null) ? txtFiltroNome.getText().toLowerCase().trim() : "";
+        String filtroRegiao = (txtFiltroRegiao.getText() != null) ? txtFiltroRegiao.getText().toUpperCase().trim() : "";
+        LocalDate dataInicio = dpInicio.getValue();
+        LocalDate dataFim = dpFim.getValue();
+
+        List<User> todosUtilizadores = userST.listAll();
+        List<User> filtrados = new ArrayList<>();
+
+        for (User u : todosUtilizadores) {
+            boolean bateNome = filtroNome.isEmpty() || u.getName().toLowerCase().contains(filtroNome);
+            boolean bateRegiao = filtroRegiao.isEmpty() ||
+                    (u.getRegion() != null && u.getRegion().getCode().toUpperCase().contains(filtroRegiao));
+
+            boolean bateData = true;
+            LocalDate dataRegisto = u.getRegistrationDate();
+            if (dataRegisto != null) {
+                if (dataInicio != null && dataRegisto.isBefore(dataInicio)) bateData = false;
+                if (dataFim != null && dataRegisto.isAfter(dataFim)) bateData = false;
+            } else if (dataInicio != null || dataFim != null) {
+                bateData = false;
+            }
+
+            if (bateNome && bateRegiao && bateData) {
+                filtrados.add(u);
+            }
+        }
+        atualizarTabelaUtilizadores(filtrados);
+    }
+
+    @FXML
+    public void handleLimparFiltros() {
+        txtFiltroNome.clear();
+        txtFiltroRegiao.clear();
+        dpInicio.setValue(null);
+        dpFim.setValue(null);
+        atualizarTabelaUtilizadores(userST.listAll());
+    }
+
+    @FXML
+    public void handleAtualizarGrafo() {
+        if (streamingGraph != null) {
+            List<GraphEdge> listaArestas = new ArrayList<>();
+            // Itera pela coleção iterável de arestas que o teu StreamingGraph disponibiliza
+            for (GraphEdge edge : streamingGraph.edges()) {
+                listaArestas.add(edge);
+            }
+            tblEdges.setItems(FXCollections.observableArrayList(listaArestas));
         }
     }
 
-    // Métodos para ficheiros
+    @FXML
     public void handleExportarDados() {
-        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
-        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("Ficheiros de Texto", "*.txt"));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Exportar Base de Dados do Sistema");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Ficheiros TXT", "*.txt"));
         File file = fileChooser.showSaveDialog(tblUsers.getScene().getWindow());
 
         if (file != null) {
             try {
-                // Pegamos na lista completa de utilizadores atual
-                List<User> listaUtilizadores = userST.listAll(); // ou a estrutura que usas para listar
-                List<String> historicoPesquisas = obterHistoricoDePesquisas(); // Lista de strings das tuas queries
-
-                DataStorageManager.exportData(file, listaUtilizadores, streamingGraph, historicoPesquisas);
-
-                System.out.println("Dados exportados com sucesso!");
+                DataStorageManager.exportData(file, userST.listAll(), streamingGraph, historicoPesquisas);
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Dados persistidos com sucesso!");
             } catch (IOException e) {
-                e.printStackTrace();
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro na Escrita", "Falha ao gravar ficheiro: " + e.getMessage());
             }
         }
     }
 
-    private List<String> historicoPesquisas = new ArrayList<>();
-
-    private void carregarHistoricoPesquisas(List<String> pesquisas) {
-        historicoPesquisas.clear();
-
-        if (pesquisas != null) {
-            historicoPesquisas.addAll(pesquisas);
-        }
-    }
-
-    private List<String> obterHistoricoDePesquisas() {
-        return historicoPesquisas;
-    }
-
+    @FXML
     public void handleImportarDados() {
-        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
-        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("Ficheiros de Texto", "*.txt"));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Importar Ficheiro de Configuração");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Ficheiros TXT", "*.txt"));
         File file = fileChooser.showOpenDialog(tblUsers.getScene().getWindow());
 
         if (file != null) {
             try {
                 List<User> utilizadoresImportados = new ArrayList<>();
 
-                // O manager lê o ficheiro, limpa o grafo antigo e injeta os novos vértices/arestas
-                List<String> pesquisasImportadas = DataStorageManager.importData(file, streamingGraph, utilizadoresImportados);
+                // DataStorageManager limpa e reconstrói o grafo internamente através do ficheiro txt
+                historicoPesquisas = DataStorageManager.importData(file, streamingGraph, utilizadoresImportados);
 
-                // !! REPOPULAR AS TUAS TABELAS DE SÍMBOLOS (ST e BST) !!
-                // Primeiro limpamos as STs antigas
-                userST.clear();  // Adapta para o método de limpar da tua ST
-                userBST.clear(); // Adapta para o método de limpar da tua BST
-
-                // Injetamos os utilizadores importados de volta nas tuas STs
+                // limpa a Tabela de Símbolos e repovoar com os registos lidos
+                userST.clear();
                 for (User u : utilizadoresImportados) {
-                    userST.insert(u);   // Substitui pelo teu método de inserção (ex: .put ou .insert)
-                    userBST.insert(u);
+                    userST.insert(u);
                 }
 
-                // Atualizar a TableView do JavaFX na hora
-                atualizarTabela(userST.listAll());
+                // sincroniza imediatamente todos os painéis visuais do programa
+                atualizarTabelaUtilizadores(userST.listAll());
+                handleAtualizarGrafo();
 
-                // Atualizar o teu histórico de pesquisas guardado na aplicação
-                carregarHistoricoPesquisas(pesquisasImportadas);
-
-                System.out.println("Tudo populado com sucesso a partir do ficheiro!");
-            } catch (IOException e) {
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Base de dados restaurada e grafo populado!");
+            } catch (Exception e) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro na Leitura", "Ficheiro corrompido ou inválido: " + e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
-    // Métodos Auxiliares de UI
-    private void preencherFormulario(User u) {
-        txtFormNome.setText(u.getName());
-        txtFormEmail.setText(u.getEmail());
-        txtFormSenha.setText(u.getPassword());
-        txtFormRegiao.setText(u.getRegion().getCode());
-        dpFormNascimento.setValue(u.getBirthDate());
+    private void atualizarTabelaUtilizadores(List<User> lista) {
+        ObservableList<User> obsList = FXCollections.observableArrayList(lista);
+        tblUsers.setItems(obsList);
     }
 
     private void limparFormulario() {
@@ -249,14 +287,19 @@ public class UserController {
         txtFormSenha.clear();
         txtFormRegiao.clear();
         dpFormNascimento.setValue(null);
-        tblUsers.getSelectionModel().clearSelection();
     }
 
-    private void mostrarAlerta(String titulo, String cabecalho, String conteudo, Alert.AlertType tipo) {
+    private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+
+        try {
+            alert.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        } catch (Exception ignored) {
+            // abre o popup padrao
+        }
         alert.showAndWait();
     }
 }

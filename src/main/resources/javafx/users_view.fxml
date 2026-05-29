@@ -1,76 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UserController" stylesheets="@style.css">
+<TabPane stylesheets="@style.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafx.controller.UserController">
 
-    <top>
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-            <Label text="Nome:"/>
-            <TextField fx:id="txtFiltroNome" promptText="Procurar..."/>
-            <Label text="Região:"/>
-            <TextField fx:id="txtFiltroRegiao" prefWidth="60" promptText="PT"/>
-            <Label text="Desde:"/>
-            <DatePicker fx:id="dpInicio"/>
-            <Label text="Até:"/>
-            <DatePicker fx:id="dpFim"/>
-            <Button text="Filtrar" onAction="#handleFiltrar"/>
-            <Button text="Limpar" onAction="#handleLimparFiltros"/>
-        </HBox>
-    </top>
+    <Tab text="Utilizadores">
+        <BorderPane>
+            <top>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+                    <Label text="Nome:" />
+                    <TextField fx:id="txtFiltroNome" promptText="Procurar..." />
+                    <Label text="Região:" />
+                    <TextField fx:id="txtFiltroRegiao" prefWidth="60" promptText="PT" />
+                    <Label text="Desde:" />
+                    <DatePicker fx:id="dpInicio" />
+                    <Label text="Até:" />
+                    <DatePicker fx:id="dpFim" />
+                    <Button onAction="#handleFiltrar" text="Filtrar" />
+                    <Button onAction="#handleLimparFiltros" text="Limpar" />
+                </HBox>
+            </top>
 
-    <center>
-        <TableView fx:id="tblUsers">
-            <columns>
-                <TableColumn fx:id="colId" text="ID" prefWidth="100"/>
-                <TableColumn fx:id="colNome" text="Nome" prefWidth="150"/>
-                <TableColumn fx:id="colEmail" text="Email" prefWidth="150"/>
-                <TableColumn fx:id="colRegiao" text="Região" prefWidth="60"/>
-                <TableColumn fx:id="colRegisto" text="Data Registo" prefWidth="100"/>
-            </columns>
-        </TableView>
-    </center>
+            <center>
+                <TableView fx:id="tblUsers" prefHeight="400.0" prefWidth="622.0">
+                    <columns>
+                        <TableColumn fx:id="colId" prefWidth="100" text="ID" />
+                        <TableColumn fx:id="colNome" prefWidth="150" text="Nome" />
+                        <TableColumn fx:id="colEmail" prefWidth="150" text="Email" />
+                        <TableColumn fx:id="colRegiao" prefWidth="60" text="Região" />
+                        <TableColumn fx:id="colRegisto" prefWidth="100" text="Data Registro" />
+                    </columns>
+                </TableView>
+            </center>
 
-    <right>
-        <VBox spacing="10" prefWidth="250">
-            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+            <right>
+                <VBox prefWidth="250" spacing="10">
+                    <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+                    <Label styleClass="label-header" text="Registrar / Editar Utilizador" />
 
-            <Label text="Registar / Editar Utilizador" styleClass="label-header"/>
+                    <Label text="Nome:" />
+                    <TextField fx:id="txtFormNome" promptText="Full Name" />
 
-            <Label text="Nome:"/>
-            <TextField fx:id="txtFormNome"/>
+                    <Label text="Email:" />
+                    <TextField fx:id="txtFormEmail" promptText="example@ex.com" />
 
-            <Label text="Email:"/>
-            <TextField fx:id="txtFormEmail"/>
+                    <Label text="Senha:" />
+                    <PasswordField fx:id="txtFormSenha" promptText="*****" />
 
-            <Label text="Senha:"/>
-            <PasswordField fx:id="txtFormSenha"/>
+                    <Label text="Região (Código):" />
+                    <TextField fx:id="txtFormRegiao" promptText="PT" />
 
-            <Label text="Região (Código):"/>
-            <TextField fx:id="txtFormRegiao" promptText="PT"/>
+                    <Label text="Data Nascimento:" />
+                    <DatePicker fx:id="dpFormNascimento" />
 
-            <Label text="Data Nascimento:"/>
-            <DatePicker fx:id="dpFormNascimento"/>
+                    <HBox alignment="CENTER" spacing="10">
+                        <Button onAction="#handleSalvar" styleClass="button-primary" text="Salvar" />
+                        <Button onAction="#handleRemover" styleClass="button-danger" text="Remover" />
+                    </HBox>
+                </VBox>
+            </right>
 
-            <HBox spacing="10" alignment="CENTER">
-                <Button text="Salvar" onAction="#handleSalvar" styleClass="button-primary"/>
-                <Button text="Remover" onAction="#handleRemover" styleClass="button-danger"/>
-            </HBox>
-        </VBox>
-    </right>
+            <bottom>
+                <HBox alignment="CENTER_RIGHT" spacing="15">
+                    <padding><Insets bottom="12" left="15" right="15" top="12" /></padding>
+                    <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Dados (.txt)" />
+                    <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Dados (.txt)" />
+                </HBox>
+            </bottom>
+        </BorderPane>
+    </Tab>
 
-    <bottom>
-        <HBox spacing="15" alignment="CENTER_RIGHT">
-            <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+    <Tab text="Artistas">
+        <SplitPane dividerPositions="0.5">
+            <VBox spacing="10">
+                <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+                <Label styleClass="label-header" text="Conteúdos (Filmes / Séries)" />
+                <TableView fx:id="tblContent" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colContentId" prefWidth="80" text="ID" />
+                        <TableColumn fx:id="colContentTitulo" prefWidth="180" text="Título" />
+                        <TableColumn fx:id="colContentAno" prefWidth="80" text="Ano" />
+                    </columns>
+                </TableView>
+            </VBox>
 
-            <Label text="Persistência de Dados (R10):" style="-fx-text-fill: #8197a4; -fx-font-style: italic;"/>
-
-            <Button text="Importar Dados (.txt)" onAction="#handleImportarDados" styleClass="button-secondary"/>
-            <Button text="Exportar Dados (.txt)" onAction="#handleExportarDados" styleClass="button-primary"/>
-        </HBox>
-    </bottom>
-
-</BorderPane>
+            <VBox spacing="10">
+                <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+                <Label styleClass="label-header" text="Artistas (Atores / Diretores)" />
+                <TableView fx:id="tblArtists" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colArtistId" prefWidth="80" text="ID" />
+                        <TableColumn fx:id="colArtistNome" prefWidth="180" text="Nome" />
+                        <TableColumn fx:id="colArtistFuncao" prefWidth="80" text="Função" />
+                    </columns>
+                </TableView>
+            </VBox>
+        </SplitPane>
+    </Tab>
+   <Tab text="Conteúdo">
+      <content>
+         <SplitPane>
+            <items>
+               <VBox spacing="10">
+                  <padding>
+                     <Insets bottom="10" left="10" right="10" top="10" />
+                  </padding>
+                  <children>
+                     <Label styleClass="label-header" text="Conteúdos (Filmes / Séries / Documentários)" />
+                     <TableView fx:id="tblContent1" VBox.vgrow="ALWAYS">
+                        <columns>
+                           <TableColumn fx:id="colContentId1" prefWidth="80" text="ID" />
+                           <TableColumn fx:id="colContentTitulo1" prefWidth="180" text="Título" />
+                           <TableColumn fx:id="colContentAno1" prefWidth="80" text="Ano" />
+                        </columns>
+                     </TableView>
+                  </children>
+               </VBox>
+            </items>
+         </SplitPane>
+      </content>
+   </Tab>
+   <Tab text="Relações do Grafo">
+      <content>
+         <BorderPane>
+            <top>
+               <HBox alignment="CENTER_LEFT" spacing="15">
+                  <padding>
+                     <Insets bottom="10" left="10" right="10" top="10" />
+                  </padding>
+                  <children>
+                     <Label styleClass="label-header" text="Visualização de Arestas Ativas (StreamingGraph)" />
+                     <Button onAction="#handleAtualizarGrafo" styleClass="button-primary" text="Atualizar Grafo" />
+                  </children>
+               </HBox>
+            </top>
+            <center>
+               <TableView fx:id="tblEdges1">
+                  <columns>
+                     <TableColumn fx:id="colEdgeOrigem1" prefWidth="150" text="Vértice Origem (De)" />
+                     <TableColumn fx:id="colEdgeDestino1" prefWidth="150" text="Vértice Destino (Para)" />
+                     <TableColumn fx:id="colEdgeTipo1" prefWidth="180" text="Tipo de Relação" />
+                     <TableColumn fx:id="colEdgePeso1" prefWidth="90" text="Peso / Afinidade" />
+                     <TableColumn fx:id="colEdgeData1" prefWidth="140" text="Timestamp" />
+                  </columns>
+               </TableView>
+            </center>
+         </BorderPane>
+      </content>
+   </Tab>
+</TabPane>
