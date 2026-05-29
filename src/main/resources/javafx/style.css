@@ -53,3 +53,13 @@
     -fx-text-fill: #00a8e1; /* O texto ganha o azul neon da Prime Video ao selecionar */
     -fx-font-weight: bold;
 }
+
+.content-scroll,
+.content-scroll > .viewport,
+.tile-content {
+    -fx-background-color: #0b141e;
+}
+
+.tile-content {
+    -fx-padding: 10;
+}
