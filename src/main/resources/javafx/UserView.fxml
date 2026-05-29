@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UserController">
+
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+
+            <top>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <padding><Insets bottom="10" left="5" right="5" top="5" /></padding>
+                    <Label text="Nome:" />
+                    <TextField fx:id="txtFiltroNome" promptText="Procurar..." />
+                    <Label text="Região:" />
+                    <TextField fx:id="txtFiltroRegiao" prefWidth="60" promptText="PT" />
+                    <Label text="Desde:" />
+                    <DatePicker fx:id="dpInicio" />
+                    <Label text="Até:" />
+                    <DatePicker fx:id="dpFim" />
+                    <Button onAction="#handleFiltrar" styleClass="button-secondary" text="Filtrar" />
+                    <Button onAction="#handleLimparFiltros" styleClass="button-secondary" text="Limpar" />
+                </HBox>
+            </top>
+
+            <center>
+                <TableView fx:id="tblUsers" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn fx:id="colId" prefWidth="100" text="ID" />
+                        <TableColumn fx:id="colNome" prefWidth="200" text="Nome" />
+                        <TableColumn fx:id="colEmail" prefWidth="250" text="Email" />
+                        <TableColumn fx:id="colRegiao" prefWidth="100" text="Região" />
+                        <TableColumn fx:id="colRegisto" prefWidth="150" text="Data Registo" />
+                    </columns>
+                </TableView>
+            </center>
+
+            <right>
+                <VBox prefWidth="260" spacing="10" BorderPane.alignment="CENTER">
+                    <padding><Insets bottom="10" left="15" right="10" top="0" /></padding>
+
+                    <Label styleClass="label-header" text="Registar / Editar Utilizador" />
+
+                    <Label text="Nome:" />
+                    <TextField fx:id="txtFormNome" promptText="Nome do utilizador" />
+
+                    <Label text="Email:" />
+                    <TextField fx:id="txtFormEmail" promptText="exemplo@email.com" />
+
+                    <Label text="Senha:" />
+                    <PasswordField fx:id="txtFormSenha" promptText="Senha de acesso" />
+
+                    <Label text="Região (Código):" />
+                    <TextField fx:id="txtFormRegiao" promptText="Ex: PT, BR, US" />
+
+                    <Label text="Data Nascimento:" />
+                    <DatePicker fx:id="dpFormNascimento" prefWidth="260" />
+
+                    <HBox alignment="CENTER" spacing="10">
+                        <padding><Insets top="10" /></padding>
+                        <Button onAction="#handleSalvar" prefWidth="110" styleClass="button-primary" text="Salvar" />
+                        <Button onAction="#handleRemover" prefWidth="110" styleClass="button-danger" text="Remover" />
+                    </HBox>
+                </VBox>
+            </right>
+
+            <bottom>
+                <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
+                    <padding><Insets bottom="5" left="5" right="5" top="15" /></padding>
+                    <Label style="-fx-text-fill: #8197a4; -fx-font-style: italic;" />
+                    <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Ficheiro (.txt)" />
+                    <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Ficheiro (.txt)" />
+                </HBox>
+            </bottom>
+
+        </BorderPane>
+    </children>
+</AnchorPane>
