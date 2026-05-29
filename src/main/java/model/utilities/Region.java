@@ -46,4 +46,9 @@ public class Region {
     public String getName() {
         return name;
     }
+
+    @Override
+    public String toString() {
+        return code;
+    }
 }

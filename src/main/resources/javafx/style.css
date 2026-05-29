@@ -1,0 +1,55 @@
+.table-view {
+    -fx-background-color: #0b141e;
+    -fx-background-radius: 6px;
+    -fx-border-color: #1a242f;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+}
+
+/* Cabeçalho da Tabela - Pinta tudo a escuro e remove o bloco branco da direita */
+.table-view .column-header-background,
+.table-view .column-header-background .filler,
+.table-view .corner {
+    -fx-background-color: #1a242f;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+    -fx-border-color: #0b141e;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+/* Linhas da Tabela - REMOVIDO O PADDING QUE ESMAGAVA AS COLUNAS */
+.table-row-cell {
+    -fx-background-color: #0b141e;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-cell-size: 38px; /* 👈 A FORMA CORRETA DE DAR ALTURA ÀS LINHAS SEM BUGAR */
+}
+
+/* Linhas alternadas (Zebra) */
+.table-row-cell:odd {
+    -fx-background-color: #111d2b;
+}
+
+/* Células onde o texto realmente vive */
+.table-cell {
+    -fx-text-fill: #ffffff; /* Força o texto a ficar branco e visível */
+    -fx-padding: 0 10 0 10; /* Margem interna segura para afastar o texto das bordas */
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Linha Selecionada */
+.table-row-cell:selected {
+    -fx-background-color: #1a3a54;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #00a8e1; /* O texto ganha o azul neon da Prime Video ao selecionar */
+    -fx-font-weight: bold;
+}
