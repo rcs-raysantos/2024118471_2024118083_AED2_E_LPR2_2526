@@ -1,11 +1,19 @@
 package javafx.controller;
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import model.artists.Artist;
@@ -63,6 +71,10 @@ public class UserController {
     @FXML private TableColumn<GraphEdge, Double> colEdgePeso;
     @FXML private TableColumn<GraphEdge, LocalDateTime> colEdgeData;
 
+    @FXML private TextField txtTituloFilme;
+    @FXML private TextField txtAnoFilme;
+    @FXML private TilePane tileContent;
+
     @FXML
     public void initialize() {
         // Instanciar o Core das tuas estruturas
@@ -77,7 +89,23 @@ public class UserController {
 
         // Carregar dados iniciais vazios na interface
         atualizarTabelaUtilizadores(userST.listAll());
+        carregarFilmesIniciais();
         handleAtualizarGrafo();
+    }
+
+    private void carregarFilmesIniciais() {
+        tileContent.getChildren().addAll(
+                criarCartaoFilme("The Shawshank Redemption", 1994),
+                criarCartaoFilme("Titanic", 1997),
+                criarCartaoFilme("The Lord of the Rings: The Fellowship of the Ring", 2001),
+                criarCartaoFilme("The Dark Knight", 2008),
+                criarCartaoFilme("Avatar", 2009),
+                criarCartaoFilme("Inception", 2010),
+                criarCartaoFilme("Interstellar", 2014),
+                criarCartaoFilme("Joker", 2019),
+                criarCartaoFilme("Top Gun: Maverick", 2022),
+                criarCartaoFilme("Oppenheimer", 2023)
+        );
     }
 
     private void configurarColunasUtilizadores() {
@@ -212,6 +240,53 @@ public class UserController {
         dpInicio.setValue(null);
         dpFim.setValue(null);
         atualizarTabelaUtilizadores(userST.listAll());
+    }
+
+    @FXML
+    public void handleAdicionarFilme() {
+        String titulo = txtTituloFilme.getText() != null ? txtTituloFilme.getText().trim() : "";
+        String anoTexto = txtAnoFilme.getText() != null ? txtAnoFilme.getText().trim() : "";
+
+        if (titulo.isEmpty() || anoTexto.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campos Vazios", "Preencha o título e o ano do filme.");
+            return;
+        }
+
+        try {
+            int ano = Integer.parseInt(anoTexto);
+            tileContent.getChildren().add(criarCartaoFilme(titulo, ano));
+            txtTituloFilme.clear();
+            txtAnoFilme.clear();
+        } catch (NumberFormatException e) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Ano Inválido", "O ano deve ser um número. Exemplo: 2026.");
+        }
+    }
+
+    private VBox criarCartaoFilme(String titulo, int ano) {
+        Label lblImagem = new Label("Imagem");
+        lblImagem.setStyle("-fx-text-fill: #1a242f;");
+
+        StackPane imagem = new StackPane(lblImagem);
+        imagem.setPrefSize(170, 210);
+        imagem.setStyle("-fx-background-color: #d9dde5; -fx-border-color: #9aa3b2; -fx-border-radius: 4; -fx-background-radius: 4;");
+
+        Label lblTitulo = new Label(titulo);
+        lblTitulo.getStyleClass().add("label-header");
+        lblTitulo.setStyle("-fx-text-fill: #ffffff;");
+
+        Label lblTipo = new Label("Filme");
+        lblTipo.setStyle("-fx-text-fill: #ffffff;");
+
+        Label lblAno = new Label("Ano: " + ano);
+        lblAno.setStyle("-fx-text-fill: #ffffff;");
+
+        VBox cartao = new VBox(6, imagem, lblTitulo, lblTipo, lblAno);
+        cartao.setPrefSize(203, 303);
+        cartao.setPadding(new Insets(10));
+        cartao.getStyleClass().add("content-card");
+        cartao.setStyle("-fx-background-color: #000000;");
+
+        return cartao;
     }
 
     @FXML
