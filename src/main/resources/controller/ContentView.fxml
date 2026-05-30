@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContentController">
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+
+            <top>
+                <VBox spacing="10">
+                    <padding>
+                        <Insets bottom="15" left="5" right="5" top="5" />
+                    </padding>
+                    <children>
+                        <Label styleClass="label-header" text="Catálogo de Conteúdos (Filmes / Séries / Documentários)" />
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <children>
+                                <TextField fx:id="txtTituloContent" prefWidth="230" promptText="Título do conteúdo" />
+                                <TextField fx:id="txtAnoContent" prefWidth="70" promptText="Ano" />
+                                <TextField fx:id="txtDuracaoContent" prefWidth="90" promptText="Duração/Temp" />
+                                <ComboBox fx:id="cmbTipoContent" prefWidth="130" promptText="Tipo" />
+                                <Button onAction="#handleAdicionarContent" styleClass="button-primary" text="Adicionar ao Catálogo" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </top>
+
+            <center>
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #dce0e3; -fx-border-color: transparent;" BorderPane.alignment="CENTER">
+                    <content>
+                        <TilePane fx:id="tileContent" hgap="20" style="-fx-background-color: #fdfdfd;" vgap="20">
+                            <padding>
+                                <Insets bottom="10" left="10" right="10" top="10" />
+                            </padding>
+                        </TilePane>
+                    </content>
+                </ScrollPane>
+            </center>
+
+            <bottom>
+                <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
+                    <padding><Insets bottom="5" left="5" right="5" top="15" /></padding>
+                    <Label style="-fx-text-fill: #8197a4; -fx-font-style: italic;" />
+                    <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Catálogo (.txt)" />
+                    <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Catálogo (.txt)" />
+                </HBox>
+            </bottom>
+
+        </BorderPane>
+    </children>
+</AnchorPane>

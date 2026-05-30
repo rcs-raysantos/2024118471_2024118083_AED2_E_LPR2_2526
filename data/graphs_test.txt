@@ -1,0 +1,27 @@
+Afonso Henriques;Dune: Part Two;USER_WATCHED;1.0
+Afonso Henriques;Dune: Part Two;USER_RATED;4.8
+Ana Silva;Stranger Things;USER_WATCHED;1.0
+Ana Silva;Stranger Things;USER_RATED;4.5
+Carlos Souza;Interstellar;USER_WATCHED;1.0
+Carlos Souza;Interstellar;USER_RATED;5.0
+Jessica Jones;The Boys;USER_WATCHED;1.0
+Jessica Jones;The Boys;USER_RATED;4.2
+Pierre Dupont;Succession;USER_WATCHED;1.0
+Oliver Smith;The Dark Knight;USER_WATCHED;1.0
+Oliver Smith;The Dark Knight;USER_RATED;4.9
+Mariana Costa;Severance;USER_WATCHED;1.0
+Rui Santos;Pulp Fiction;USER_WATCHED;1.0
+Rui Santos;Pulp Fiction;USER_RATED;5.0
+Emily Watson;Chernobyl;USER_WATCHED;1.0
+Lucas Martins;Stranger Things;USER_WATCHED;1.0
+
+Timothée Chalamet;Dune: Part Two;ACTOR_IN;1.0
+Zendaya;Dune: Part Two;ACTOR_IN;1.0
+Denis Villeneuve;Dune: Part Two;DIRECTED_BY;1.0
+
+Margot Robbie;The Dark Knight;ACTOR_IN;1.0
+Quentin Tarantino;Pulp Fiction;DIRECTED_BY;1.0
+
+Pedro Pascal;The Boys;ACTOR_IN;1.0
+Florence Pugh;Dune: Part Two;ACTOR_IN;1.0
+Martin Scorsese;Succession;DIRECTED_BY;1.0

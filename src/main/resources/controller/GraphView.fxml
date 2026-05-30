@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GraphController">
+
+    <top>
+        <VBox spacing="10">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <children>
+                        <TextField fx:id="txtPesquisaVertice" prefWidth="200.0" promptText="Pesquisar Vértice (User/Filme)..." />
+
+                        <ComboBox fx:id="cmbFiltroRelacao" prefWidth="180.0" promptText="Tipo de Relação" />
+
+                        <Button onAction="#handleFiltrarGrafo" styleClass="button-primary" text="Filtrar" />
+                        <Button onAction="#handleLimparFiltros" styleClass="button-secondary" text="Limpar Filtros" />
+
+                        <Pane HBox.hgrow="ALWAYS" />
+
+                        <Button onAction="#handleDesenhar" styleClass="button-primary" text="Desenhar Grafo" />
+                        <Button onAction="#handleLimpar" styleClass="button-danger" text="Limpar Painel" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+
+    <center>
+        <BorderPane fx:id="graphContainer" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" />
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="10" left="15" right="15" top="15" /></padding>
+            <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Grafo (.txt)" />
+            <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Grafo (.txt)" />
+        </HBox>
+    </bottom>
+
+</BorderPane>
