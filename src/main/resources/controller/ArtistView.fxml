@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ArtistController">
+
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+
+            <top>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <padding><Insets bottom="10" left="5" right="5" top="5" /></padding>
+                    <Label text="Nome:" />
+                    <TextField fx:id="txtFiltroArtistNome" promptText="Procurar artista..." />
+                    <Label text="País:" />
+                    <TextField fx:id="txtFiltroArtistPais" prefWidth="80" promptText="Ex: US, PT" />
+                    <Button onAction="#handleFiltrar" styleClass="button-secondary" text="Filtrar" />
+                    <Button onAction="#handleLimparFiltros" styleClass="button-secondary" text="Limpar" />
+                </HBox>
+            </top>
+
+            <center>
+                <TableView fx:id="tblArtists" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn fx:id="colArtistId" prefWidth="100" text="ID" />
+                        <TableColumn fx:id="colArtistName" prefWidth="250" text="Nome" />
+                        <TableColumn fx:id="colArtistCountry" prefWidth="150" text="País" />
+                    </columns>
+                </TableView>
+            </center>
+
+            <right>
+                <VBox prefWidth="260" spacing="10" BorderPane.alignment="CENTER">
+                    <padding><Insets bottom="10" left="15" right="10" top="0" /></padding>
+
+                    <Label styleClass="label-header" text="Registar / Editar Artista" />
+
+                    <Label text="Nome:" />
+                    <TextField fx:id="txtFormArtistNome" promptText="Nome completo" />
+
+                    <Label text="País (Código):" />
+                    <TextField fx:id="txtFormArtistPais" promptText="Ex: PT, US, FR" />
+
+                    <Label text="Tipo de Artista:" />
+                    <ComboBox fx:id="cmbArtistTipo" prefWidth="260" promptText="Selecione o tipo..." />
+
+                    <HBox alignment="CENTER" spacing="10">
+                        <padding><Insets top="10" /></padding>
+                        <Button onAction="#handleSalvar" prefWidth="110" styleClass="button-primary" text="Salvar" />
+                        <Button onAction="#handleRemover" prefWidth="110" styleClass="button-danger" text="Remover" />
+                    </HBox>
+                </VBox>
+            </right>
+
+            <bottom>
+                <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
+                    <padding><Insets bottom="5" left="5" right="5" top="15" /></padding>
+                    <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Elenco (.txt)" />
+                    <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Elenco (.txt)" />
+                </HBox>
+            </bottom>
+
+        </BorderPane>
+    </children>
+</AnchorPane>

@@ -12,9 +12,11 @@ module edu.ufp.inf.aed2_lp2_2324_students {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    opens javafx to javafx.fxml;
-    exports javafx;
-    exports javafx.controller;
-    opens javafx.controller to javafx.fxml;
+    requires smartgraph;
+
+    exports controller;
+    opens controller to javafx.fxml;
+    exports app;
+    opens app to javafx.fxml;
 
 }

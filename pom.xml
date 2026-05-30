@@ -116,6 +116,11 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.brunomnsilva</groupId>
+            <artifactId>smartgraph</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -135,11 +140,11 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
+                        <!-- Default configuration for running with: mvn clean controller:run -->
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                edu.ufp.inf.aed2_lp2_2324_students/edu.ufp.inf.lp2.p06_gui_javafx.helloword.HelloApplication
+                                edu.ufp.inf.aed2_lp2_2324_students/javafx.Launcher
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

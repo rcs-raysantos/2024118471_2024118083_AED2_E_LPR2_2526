@@ -1,0 +1,10 @@
+Dune: Part Two;2024;166;MOVIE
+Stranger Things;2016;4;SERIES
+Interstellar;2014;169;MOVIE
+The Boys;2019;4;SERIES
+Spider-Man: Across the Spider-Verse;2023;140;MOVIE
+Succession;2018;4;SERIES
+The Dark Knight;2008;152;MOVIE
+Severance;2022;1;SERIES
+Pulp Fiction;1994;154;MOVIE
+Chernobyl;2019;1;SERIES
