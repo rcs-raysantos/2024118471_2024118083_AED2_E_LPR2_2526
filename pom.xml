@@ -144,7 +144,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                edu.ufp.inf.aed2_lp2_2324_students/edu.ufp.inf.lp2.p06_gui_javafx.helloword.HelloApplication
+                                edu.ufp.inf.aed2_lp2_2324_students/javafx.Launcher
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
