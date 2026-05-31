@@ -352,7 +352,11 @@ public class GraphController {
 
         this.streamingGraph = novoGrafo;
         if (graphContainer != null) {
-            handleDesenhar();
+            graphContainer.setCenter(null);
         }
+    }
+
+    public StreamingGraph getStreamingGraphSnapshot() {
+        return streamingGraph;
     }
 }

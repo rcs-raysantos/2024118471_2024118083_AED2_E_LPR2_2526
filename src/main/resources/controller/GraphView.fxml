@@ -33,12 +33,4 @@
         <BorderPane fx:id="graphContainer" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER" />
     </center>
 
-    <bottom>
-        <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
-            <padding><Insets bottom="10" left="15" right="15" top="15" /></padding>
-            <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Grafo (.txt)" />
-            <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Grafo (.txt)" />
-        </HBox>
-    </bottom>
-
 </BorderPane>

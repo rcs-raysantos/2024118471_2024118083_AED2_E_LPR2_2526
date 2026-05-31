@@ -42,15 +42,6 @@
                 </ScrollPane>
             </center>
 
-            <bottom>
-                <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
-                    <padding><Insets bottom="5" left="5" right="5" top="15" /></padding>
-                    <Label style="-fx-text-fill: #8197a4; -fx-font-style: italic;" />
-                    <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Catálogo (.txt)" />
-                    <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Catálogo (.txt)" />
-                </HBox>
-            </bottom>
-
         </BorderPane>
     </children>
 </AnchorPane>

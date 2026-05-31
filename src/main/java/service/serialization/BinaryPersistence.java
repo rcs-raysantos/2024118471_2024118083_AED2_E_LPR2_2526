@@ -34,4 +34,21 @@ public class BinaryPersistence {
             return (SystemState) in.readObject();
         }
     }
+
+    public void saveObject(Object object, File file) throws IOException {
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
+
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+            out.writeObject(object);
+        }
+    }
+
+    public Object loadObject(File file) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            return in.readObject();
+        }
+    }
 }

@@ -54,14 +54,6 @@
                 </VBox>
             </right>
 
-            <bottom>
-                <HBox alignment="CENTER_RIGHT" spacing="15" BorderPane.alignment="CENTER">
-                    <padding><Insets bottom="5" left="5" right="5" top="15" /></padding>
-                    <Button onAction="#handleImportarDados" styleClass="button-secondary" text="Importar Elenco (.txt)" />
-                    <Button onAction="#handleExportarDados" styleClass="button-primary" text="Exportar Elenco (.txt)" />
-                </HBox>
-            </bottom>
-
         </BorderPane>
     </children>
 </AnchorPane>
