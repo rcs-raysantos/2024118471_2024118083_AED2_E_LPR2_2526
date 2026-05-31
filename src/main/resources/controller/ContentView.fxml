@@ -22,6 +22,8 @@
                                 <TextField fx:id="txtDuracaoContent" prefWidth="90" promptText="Duração/Temp" />
                                 <ComboBox fx:id="cmbTipoContent" prefWidth="130" promptText="Tipo" />
                                 <Button onAction="#handleAdicionarContent" styleClass="button-primary" text="Adicionar ao Catálogo" />
+                                <TextField fx:id="txtTituloRemoverContent" prefWidth="180" promptText="Título a remover" />
+                                <Button onAction="#handleRemoverContent" styleClass="button-secondary" text="Remover" />
                             </children>
                         </HBox>
                     </children>
