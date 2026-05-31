@@ -353,10 +353,32 @@ public class GraphController {
         this.streamingGraph = novoGrafo;
         if (graphContainer != null) {
             graphContainer.setCenter(null);
+            desenharQuandoPainelEstiverPronto();
         }
     }
 
     public StreamingGraph getStreamingGraphSnapshot() {
         return streamingGraph;
+    }
+
+    private void desenharQuandoPainelEstiverPronto() {
+        Platform.runLater(() -> {
+            if (graphContainer.getWidth() > 0 && graphContainer.getHeight() > 0) {
+                handleDesenhar();
+            } else {
+                graphContainer.widthProperty().addListener((obs, oldValue, newValue) -> tentarDesenharGrafoImportado());
+                graphContainer.heightProperty().addListener((obs, oldValue, newValue) -> tentarDesenharGrafoImportado());
+            }
+        });
+    }
+
+    private void tentarDesenharGrafoImportado() {
+        if (streamingGraph != null
+                && streamingGraph.vertexCount() > 0
+                && graphContainer.getWidth() > 0
+                && graphContainer.getHeight() > 0
+                && graphContainer.getCenter() == null) {
+            handleDesenhar();
+        }
     }
 }
