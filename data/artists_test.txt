@@ -1,0 +1,10 @@
+Pedro Pascal;Masculino;1975-04-02;CL;Creative Artists Agency;ACTOR
+Margot Robbie;Feminino;1990-07-02;AU;LuckyChap Entertainment;ACTOR
+Quentin Tarantino;Masculino;1963-03-27;US;Não-Linear Violento;DIRECTOR
+Florence Pugh;Feminino;1996-01-03;UK;William Morris Endeavor;ACTOR
+Martin Scorsese;Masculino;1942-11-17;US;Crime e Drama Psicológico;DIRECTOR
+Robert Downey Jr.;Masculino;1965-04-04;US;Team Downey;ACTOR
+Denis Villeneuve;Masculino;1967-10-03;CA;Ficção Científica Atmosférica;DIRECTOR
+Zendaya;Feminino;1996-09-01;US;CAA;ACTOR
+Guillermo del Toro;Masculino;1964-10-09;MX;Fantasia Sombria;DIRECTOR
+Timothée Chalamet;Masculino;1995-12-27;US;UTA;ACTOR

@@ -1,4 +1,4 @@
-package javafx.controller;
+package controller;
 
 public class MainController {
 

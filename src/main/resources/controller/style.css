@@ -1,0 +1,55 @@
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 6px;
+    -fx-border-color: #d1d5db; /* Cinza claro suave */
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+}
+
+/* Cabeçalho da Tabela - Pinta tudo a cinza claro e remove o bloco branco da direita */
+.table-view .column-header-background,
+.table-view .column-header-background .filler,
+.table-view .corner {
+    -fx-background-color: #f3f4f6; /* Fundo do cabeçalho limpo */
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 1px 1px 0; /* Linha divisória fina abaixo e ao lado */
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #1f2937; /* Texto do cabeçalho quase preto para contraste */
+    -fx-font-weight: bold;
+}
+
+/* Linhas da Tabela */
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-cell-size: 38px;
+}
+
+/* Linhas alternadas (Zebra) */
+.table-row-cell:odd {
+    -fx-background-color: #f9fafb; /* Alternância super suave para não cansar os olhos */
+}
+
+/* Células onde o texto realmente vive */
+.table-cell {
+    -fx-text-fill: #374151; /* Texto cinza escuro de alta legibilidade */
+    -fx-padding: 0 10 0 10;
+    -fx-alignment: CENTER_LEFT;
+}
+
+/* Linha Selecionada */
+.table-row-cell:selected {
+    -fx-background-color: #e0f2fe; /* Fundo azul claro céu para destacar */
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #0284c7; /* O texto ganha um azul vivo e profissional */
+    -fx-font-weight: bold;
+}
