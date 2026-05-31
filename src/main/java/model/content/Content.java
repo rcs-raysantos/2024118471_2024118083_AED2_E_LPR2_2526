@@ -6,6 +6,7 @@ import model.support.Ratable;
 import model.support.Searchable;
 import model.support.Streamable;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +17,8 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public abstract class Content implements Ratable, Searchable, Streamable {
+public abstract class Content implements Ratable, Searchable, Streamable, Serializable {
+  private static final long serialVersionUID = 1L;
 
   /** Identificador único do conteúdo */
   private final String id;

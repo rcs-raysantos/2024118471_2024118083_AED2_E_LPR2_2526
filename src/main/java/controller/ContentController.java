@@ -16,8 +16,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+import service.serialization.ContentRecord;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ContentController {
@@ -273,6 +276,42 @@ public class ContentController {
         cartao.setOnMouseExited(e -> cartao.setStyle("-fx-background-color: #151e27; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #232f3e; -fx-border-width: 1;"));
 
         return cartao;
+    }
+
+    public List<ContentRecord> getContentRecordsSnapshot() {
+        List<ContentRecord> records = new ArrayList<>();
+
+        for (Node node : tileContent.getChildren()) {
+            if (node instanceof VBox) {
+                VBox cartao = (VBox) node;
+                Label lblTitulo = (Label) cartao.lookup("#idTitulo");
+                Label lblTipo = (Label) cartao.lookup("#idTipo");
+                Label lblAno = (Label) cartao.lookup("#idAno");
+                Label lblDuracao = (Label) cartao.lookup("#idDuracao");
+
+                if (lblTitulo != null && lblTipo != null && lblAno != null && lblDuracao != null) {
+                    String titulo = lblTitulo.getText();
+                    String tipo = lblTipo.getText();
+                    int ano = Integer.parseInt(lblAno.getText().replace("Ano: ", "").trim());
+                    int duracao = Integer.parseInt(lblDuracao.getText().replaceAll("[^0-9]", ""));
+                    records.add(new ContentRecord(titulo, ano, duracao, tipo));
+                }
+            }
+        }
+
+        return records;
+    }
+
+    public void loadContentRecordsSnapshot(List<ContentRecord> records) {
+        tileContent.getChildren().clear();
+        for (ContentRecord record : records) {
+            tileContent.getChildren().add(criarCartaoContent(
+                    record.getTitle(),
+                    record.getYear(),
+                    record.getDuration(),
+                    record.getType()
+            ));
+        }
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {

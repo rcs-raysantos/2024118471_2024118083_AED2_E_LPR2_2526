@@ -20,6 +20,9 @@ import model.graph.StreamingGraph;
 import model.graph.EdgeMetadata;
 import model.graph.RelationType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GraphController {
 
     @FXML private BorderPane graphContainer;
@@ -320,5 +323,36 @@ public class GraphController {
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    public List<GraphEdge> getGraphEdgesSnapshot() {
+        if (streamingGraph == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(streamingGraph.edges());
+    }
+
+    public List<String> getGraphVerticesSnapshot() {
+        if (streamingGraph == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(streamingGraph.vertices());
+    }
+
+    public void loadGraphSnapshot(List<String> vertices, List<GraphEdge> edges) {
+        StreamingGraph novoGrafo = new StreamingGraph();
+
+        for (String vertex : vertices) {
+            novoGrafo.addVertex(vertex);
+        }
+
+        for (GraphEdge edge : edges) {
+            novoGrafo.addEdge(edge.getFrom(), edge.getTo(), edge.getMetadata());
+        }
+
+        this.streamingGraph = novoGrafo;
+        if (graphContainer != null) {
+            handleDesenhar();
+        }
     }
 }

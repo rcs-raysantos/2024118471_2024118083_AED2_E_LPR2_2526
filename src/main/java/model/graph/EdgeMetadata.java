@@ -1,11 +1,13 @@
 package model.graph;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EdgeMetadata {
+public class EdgeMetadata implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final RelationType type;
     private final double weight;

@@ -1,6 +1,9 @@
 package model.graph;
 
-public class GraphEdge {
+import java.io.Serializable;
+
+public class GraphEdge implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final String from;
     private final String to;

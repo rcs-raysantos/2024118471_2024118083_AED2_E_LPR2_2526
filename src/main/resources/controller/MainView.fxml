@@ -1,40 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
     <children>
-        <TabPane prefHeight="800.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE"
-                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <tabs>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <top>
+                <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 10;">
+                    <children>
+                        <Button onAction="#handleImportarBinario" text="Importar Binario (.bin)" />
+                        <Button onAction="#handleExportarBinario" text="Exportar Binario (.bin)" />
+                    </children>
+                </HBox>
+            </top>
+            <center>
+                <TabPane tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
 
-                <Tab text="Users">
-                    <content>
-                        <fx:include source="UserView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Users">
+                            <content>
+                                <fx:include fx:id="userView" source="UserView.fxml" />
+                            </content>
+                        </Tab>
 
-                <Tab text="Contents">
-                    <content>
-                        <fx:include source="ContentView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Contents">
+                            <content>
+                                <fx:include fx:id="contentView" source="ContentView.fxml" />
+                            </content>
+                        </Tab>
 
-                <Tab text="Artists">
-                    <content>
-                        <fx:include source="ArtistView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Artists">
+                            <content>
+                                <fx:include fx:id="artistView" source="ArtistView.fxml" />
+                            </content>
+                        </Tab>
 
-                <Tab text="Graphs">
-                    <content>
-                        <fx:include source="GraphView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Graphs">
+                            <content>
+                                <fx:include fx:id="graphView" source="GraphView.fxml" />
+                            </content>
+                        </Tab>
 
-            </tabs>
-        </TabPane>
+                    </tabs>
+                </TabPane>
+            </center>
+        </BorderPane>
     </children>
 </AnchorPane>
