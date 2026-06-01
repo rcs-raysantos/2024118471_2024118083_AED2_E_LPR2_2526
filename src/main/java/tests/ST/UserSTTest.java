@@ -15,8 +15,6 @@ import static tests.DataInitializer.*;
  * * Esta classe contém uma bateria de testes exaustiva para validar o comportamento
  * da Tabela de Símbolos de Utilizadores (UserST). São testados casos de sucesso,
  * inserções duplicadas, tratamento de nulos e integridade de dados após edições e remoções.
- * @version 1.0
- * @date 2026
  */
 public class UserSTTest {
 

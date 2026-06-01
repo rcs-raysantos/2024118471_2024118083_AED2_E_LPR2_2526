@@ -12,7 +12,6 @@ import static tests.DataInitializer.user_buildBST;
  * * Esta classe valida as operações de uma Árvore de Procura Binária (BST)
  * organizada por data de registo, incluindo pesquisas por intervalos,
  * filtragem por região e buscas por substrings no nome.
- * @version 1.0
  */
 public class UserBSTTest {
 

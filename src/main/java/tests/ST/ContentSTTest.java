@@ -14,9 +14,6 @@ import java.util.UUID;
  * * Esta classe contém os testes necessários para garantir que a Tabela de Símbolos
  * de conteúdos (Movies, Series, Documentaries) funciona corretamente, validando
  * a persistência, edição e remoção polimórfica dos objetos.
- * * @author O Teu Nome
- * @version 1.0
- * @date 2026
  */
 public class ContentSTTest {
 

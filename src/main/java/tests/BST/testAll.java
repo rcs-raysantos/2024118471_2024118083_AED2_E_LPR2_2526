@@ -6,8 +6,6 @@ package tests.BST;
  * de todos os testes unitários relacionados com as Red-Black BSTs de Utilizadores,
  * Conteúdos, Artistas e Géneros. É essencial para validar as funcionalidades de
  * ordenação e pesquisas por intervalo.
- * @version 1.0
- * @date 2026
  */
 public class testAll {
 

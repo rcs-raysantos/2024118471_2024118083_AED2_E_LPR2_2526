@@ -212,8 +212,4 @@ public class GenreSTTest {
 
         return st;
     }
-
-    public static void main(String[] args) {
-        runAll();
-    }
 }
