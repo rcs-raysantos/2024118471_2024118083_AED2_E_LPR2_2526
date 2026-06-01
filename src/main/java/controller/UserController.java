@@ -340,6 +340,26 @@ public class UserController {
         dpFormNascimento.setValue(null);
     }
 
+    public List<User> getUsersSnapshot() {
+        if (userST == null) {
+            return new ArrayList<>();
+        }
+        return userST.listAll();
+    }
+
+    public void loadUsersSnapshot(List<User> users) {
+        this.userST = new UserST();
+        this.streamingGraph = this.streamingGraph == null ? new StreamingGraph() : this.streamingGraph;
+
+        for (User user : users) {
+            userST.insert(user);
+            streamingGraph.addVertex(user.getId());
+        }
+
+        carregarDadosDoBackEnd();
+        limparFormulario();
+    }
+
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String msg) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

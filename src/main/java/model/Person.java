@@ -2,6 +2,7 @@ package model;
 
 import model.support.Identifiable;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -12,7 +13,8 @@ import java.util.UUID;
  * 
  * @version 1.0
  */
-public abstract class Person implements Identifiable {
+public abstract class Person implements Identifiable, Serializable {
+  private static final long serialVersionUID = 1L;
 
   /** Identificador único da pessoa */
   private String id;

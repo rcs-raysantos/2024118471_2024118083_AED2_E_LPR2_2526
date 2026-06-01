@@ -9,6 +9,9 @@ import model.content.Content;
 import model.content.Genre;
 import model.users.User;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,12 +22,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class StreamingGraph {
+public class StreamingGraph implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final Map<String, Integer> vertexIndexes;
     private final List<String> vertexIds;
     private final List<GraphEdge> edges;
-    private EdgeWeightedDigraph graph;
+    private transient EdgeWeightedDigraph graph;
 
     public StreamingGraph() {
         this.vertexIndexes = new HashMap<>();
@@ -319,5 +323,10 @@ public class StreamingGraph {
         for (GraphEdge edge : edges) {
             graph.addEdge(toPrincetonEdge(edge));
         }
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        rebuildGraph();
     }
 }

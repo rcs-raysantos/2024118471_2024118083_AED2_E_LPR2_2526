@@ -1,6 +1,7 @@
 package model.content;
 import model.users.User;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +12,8 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class Genre {
+public class Genre implements Serializable {
+  private static final long serialVersionUID = 1L;
 
   /** Identificador único do gênero */
   private final String id;

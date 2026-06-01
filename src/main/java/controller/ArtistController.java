@@ -242,6 +242,17 @@ public class ArtistController {
         cmbArtistTipo.setValue("Ator / Atriz");
     }
 
+    public List<Artist> getArtistsSnapshot() {
+        return new ArrayList<>(baseDadosArtistas);
+    }
+
+    public void loadArtistsSnapshot(List<Artist> artists) {
+        baseDadosArtistas.clear();
+        baseDadosArtistas.addAll(artists);
+        atualizarTabela(baseDadosArtistas);
+        limparFormulario();
+    }
+
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String msg) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

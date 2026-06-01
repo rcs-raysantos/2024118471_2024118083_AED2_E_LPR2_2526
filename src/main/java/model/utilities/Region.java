@@ -1,12 +1,15 @@
 package model.utilities;
 
+import java.io.Serializable;
+
 /**
  * Classe que representa uma região/país no sistema.
  * Utiliza um código padronizado (ex: PT para Portugal) para facilitar comparações.
  * 
  * @version 1.0
  */
-public class Region {
+public class Region implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * Código padronizado da região (ex: PT, ES, FR).
      * Utilizado para facilitar comparações sem depender de formações diferentes.
