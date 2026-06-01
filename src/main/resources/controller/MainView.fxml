@@ -1,40 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
     <children>
-        <TabPane prefHeight="800.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE"
-                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                 AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <tabs>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <center>
+                <TabPane fx:id="mainTabs" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
 
-                <Tab text="Users">
-                    <content>
-                        <fx:include source="UserView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Users">
+                            <content>
+                                <fx:include fx:id="userView" source="UserView.fxml" />
+                            </content>
+                        </Tab>
 
-                <Tab text="Contents">
-                    <content>
-                        <fx:include source="ContentView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Contents">
+                            <content>
+                                <fx:include fx:id="contentView" source="ContentView.fxml" />
+                            </content>
+                        </Tab>
 
-                <Tab text="Artists">
-                    <content>
-                        <fx:include source="ArtistView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Artists">
+                            <content>
+                                <fx:include fx:id="artistView" source="ArtistView.fxml" />
+                            </content>
+                        </Tab>
 
-                <Tab text="Graphs">
-                    <content>
-                        <fx:include source="GraphView.fxml" />
-                    </content>
-                </Tab>
+                        <Tab text="Graphs">
+                            <content>
+                                <fx:include fx:id="graphView" source="GraphView.fxml" />
+                            </content>
+                        </Tab>
 
-            </tabs>
-        </TabPane>
+                    </tabs>
+                </TabPane>
+            </center>
+            <bottom>
+                <HBox alignment="CENTER_RIGHT" spacing="12" style="-fx-padding: 10; -fx-background-color: #f4f6f8; -fx-border-color: #d0d7de; -fx-border-width: 1 0 0 0;">
+                    <children>
+                        <Label text="Guardar / carregar:" />
+                        <ComboBox fx:id="cmbFormatoPersistencia" prefWidth="150" />
+                        <Button onAction="#handleImportarSelecionado" prefWidth="110" text="Importar" />
+                        <Button onAction="#handleExportarSelecionado" prefWidth="110" text="Exportar" />
+                    </children>
+                </HBox>
+            </bottom>
+        </BorderPane>
     </children>
 </AnchorPane>

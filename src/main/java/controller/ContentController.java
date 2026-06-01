@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,11 +16,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
+import service.serialization.ContentRecord;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class ContentController {
     @FXML private TextField txtTituloContent;
+    @FXML private TextField txtTituloRemoverContent;
     @FXML private TextField txtAnoContent;
     @FXML private TextField txtDuracaoContent;
     @FXML private ComboBox<String> cmbTipoContent;
@@ -71,6 +77,48 @@ public class ContentController {
             cmbTipoContent.setValue("Filme");
         } catch (NumberFormatException e) {
             mostrarAlerta(Alert.AlertType.WARNING, "Formato Inválido", "O ano e a duração devem ser números válidos.");
+        }
+    }
+
+    @FXML
+    public void handleRemoverContent() {
+        String tituloRemover = txtTituloRemoverContent.getText() != null ? txtTituloRemoverContent.getText().trim() : "";
+
+        if (tituloRemover.isEmpty()) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Campo Vazio", "Escreva o titulo do conteudo que pretende remover.");
+            return;
+        }
+
+        VBox cartaoEncontrado = null;
+        String tituloEncontrado = null;
+
+        for (Node node : tileContent.getChildren()) {
+            if (node instanceof VBox) {
+                VBox cartao = (VBox) node;
+                Label lblTitulo = (Label) cartao.lookup("#idTitulo");
+
+                if (lblTitulo != null && lblTitulo.getText().equalsIgnoreCase(tituloRemover)) {
+                    cartaoEncontrado = cartao;
+                    tituloEncontrado = lblTitulo.getText();
+                    break;
+                }
+            }
+        }
+
+        if (cartaoEncontrado == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Conteudo Nao Encontrado", "Nao existe nenhum conteudo com o titulo \"" + tituloRemover + "\".");
+            return;
+        }
+
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Remover Conteudo");
+        confirmacao.setHeaderText(null);
+        confirmacao.setContentText("Tem a certeza que pretende remover \"" + tituloEncontrado + "\"?");
+
+        Optional<ButtonType> resposta = confirmacao.showAndWait();
+        if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
+            tileContent.getChildren().remove(cartaoEncontrado);
+            txtTituloRemoverContent.clear();
         }
     }
 
@@ -228,6 +276,42 @@ public class ContentController {
         cartao.setOnMouseExited(e -> cartao.setStyle("-fx-background-color: #151e27; -fx-background-radius: 8; -fx-border-radius: 8; -fx-border-color: #232f3e; -fx-border-width: 1;"));
 
         return cartao;
+    }
+
+    public List<ContentRecord> getContentRecordsSnapshot() {
+        List<ContentRecord> records = new ArrayList<>();
+
+        for (Node node : tileContent.getChildren()) {
+            if (node instanceof VBox) {
+                VBox cartao = (VBox) node;
+                Label lblTitulo = (Label) cartao.lookup("#idTitulo");
+                Label lblTipo = (Label) cartao.lookup("#idTipo");
+                Label lblAno = (Label) cartao.lookup("#idAno");
+                Label lblDuracao = (Label) cartao.lookup("#idDuracao");
+
+                if (lblTitulo != null && lblTipo != null && lblAno != null && lblDuracao != null) {
+                    String titulo = lblTitulo.getText();
+                    String tipo = lblTipo.getText();
+                    int ano = Integer.parseInt(lblAno.getText().replace("Ano: ", "").trim());
+                    int duracao = Integer.parseInt(lblDuracao.getText().replaceAll("[^0-9]", ""));
+                    records.add(new ContentRecord(titulo, ano, duracao, tipo));
+                }
+            }
+        }
+
+        return records;
+    }
+
+    public void loadContentRecordsSnapshot(List<ContentRecord> records) {
+        tileContent.getChildren().clear();
+        for (ContentRecord record : records) {
+            tileContent.getChildren().add(criarCartaoContent(
+                    record.getTitle(),
+                    record.getYear(),
+                    record.getDuration(),
+                    record.getType()
+            ));
+        }
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {

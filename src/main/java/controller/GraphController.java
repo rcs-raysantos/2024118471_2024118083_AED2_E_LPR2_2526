@@ -20,6 +20,9 @@ import model.graph.StreamingGraph;
 import model.graph.EdgeMetadata;
 import model.graph.RelationType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GraphController {
 
     @FXML private BorderPane graphContainer;
@@ -320,5 +323,62 @@ public class GraphController {
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    public List<GraphEdge> getGraphEdgesSnapshot() {
+        if (streamingGraph == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(streamingGraph.edges());
+    }
+
+    public List<String> getGraphVerticesSnapshot() {
+        if (streamingGraph == null) {
+            return new ArrayList<>();
+        }
+        return new ArrayList<>(streamingGraph.vertices());
+    }
+
+    public void loadGraphSnapshot(List<String> vertices, List<GraphEdge> edges) {
+        StreamingGraph novoGrafo = new StreamingGraph();
+
+        for (String vertex : vertices) {
+            novoGrafo.addVertex(vertex);
+        }
+
+        for (GraphEdge edge : edges) {
+            novoGrafo.addEdge(edge.getFrom(), edge.getTo(), edge.getMetadata());
+        }
+
+        this.streamingGraph = novoGrafo;
+        if (graphContainer != null) {
+            graphContainer.setCenter(null);
+            desenharQuandoPainelEstiverPronto();
+        }
+    }
+
+    public StreamingGraph getStreamingGraphSnapshot() {
+        return streamingGraph;
+    }
+
+    private void desenharQuandoPainelEstiverPronto() {
+        Platform.runLater(() -> {
+            if (graphContainer.getWidth() > 0 && graphContainer.getHeight() > 0) {
+                handleDesenhar();
+            } else {
+                graphContainer.widthProperty().addListener((obs, oldValue, newValue) -> tentarDesenharGrafoImportado());
+                graphContainer.heightProperty().addListener((obs, oldValue, newValue) -> tentarDesenharGrafoImportado());
+            }
+        });
+    }
+
+    private void tentarDesenharGrafoImportado() {
+        if (streamingGraph != null
+                && streamingGraph.vertexCount() > 0
+                && graphContainer.getWidth() > 0
+                && graphContainer.getHeight() > 0
+                && graphContainer.getCenter() == null) {
+            handleDesenhar();
+        }
     }
 }
