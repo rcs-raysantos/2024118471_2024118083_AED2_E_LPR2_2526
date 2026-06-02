@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class GenreBSTTest {
     public static void runAll() {
-        System.out.println("\n── GenreBSTTest ────────────────────────");
+        System.out.println("\n--------------------------- GenreBSTTest ---------------------------");
         testInsert();
         testInsertNull();
         testRemove();

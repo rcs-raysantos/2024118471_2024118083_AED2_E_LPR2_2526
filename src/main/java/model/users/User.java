@@ -14,9 +14,6 @@ import java.util.UUID;
  * Classe que representa um usuário no sistema.
  * Um usuário tem email, senha, data de registro e preferências de gênero.
  * Implementa a interface Searchable para buscar conteùdos.
- * 
-
- * @version 1.0
  */
 public class User extends Person implements Searchable {
 

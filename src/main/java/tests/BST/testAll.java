@@ -27,14 +27,14 @@ public class testAll {
         /** Executa os testes de procura e filtragem de utilizadores */
         UserBSTTest.runAll();
 
-        /** Executa os testes de organização cronológica de conteúdos */
-        ContentBSTTest.runAll();
-
         /** Executa os testes de ordenação e estatísticas de artistas */
         ArtistBSTTest.runAll();
 
         /** Executa os testes de gestão e hierarquia de géneros */
         GenreBSTTest.runAll();
+
+        /** Executa os testes de organização cronológica de conteúdos */
+        ContentBSTTest.runAll();
 
         System.out.println("\nTESTES BST CONCLUIDOS\n");
     }

@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ContentBSTTest {
     public static void runAll() {
-        System.out.println("\n── ContentBSTTest ──────────────────────");
+        System.out.println("\n--------------------------- ContentBSTTest ---------------------------");
         testInsert();
         testInsertNull();
         testRemove();

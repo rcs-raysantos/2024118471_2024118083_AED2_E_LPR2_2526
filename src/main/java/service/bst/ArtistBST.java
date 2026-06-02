@@ -12,8 +12,6 @@ import java.util.List;
  * Gestor de artistas utilizando uma Árvore de Pesquisa Binária Balanceada (Red-Black BST).
  * Esta estrutura organiza os artistas cronologicamente pela sua data de nascimento.
  * Permite realizar pesquisas por intervalos temporais, nacionalidade, género e correspondência de nomes.
- * * @author Rayssa Santos
- * @version 1.0
  */
 public class ArtistBST {
 

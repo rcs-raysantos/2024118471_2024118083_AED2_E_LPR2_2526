@@ -10,11 +10,6 @@ import java.time.LocalDate;
 /**
  * Inicializador de dados partilhados entre todos os testes (R5).
  * Todos os campos e métodos são static para serem importados diretamente.
- *
- * Usar com:
- *   import static tests.DataInitializer.*;
- *
- * @version 1.0
  */
 public class DataInitializer {
 
