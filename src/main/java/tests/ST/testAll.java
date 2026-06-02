@@ -5,8 +5,6 @@ package tests.ST;
  * * Esta classe atua como um "Test Suite", centralizando a execução de todos os
  * testes unitários relacionados com as Tabelas de Símbolos de Utilizadores,
  * Conteúdos e Artistas. Garante que todos os requisitos da fase R2 sejam validados de uma só vez.
- * @version 1.0
- * @date 2026
  */
 public class testAll {
 

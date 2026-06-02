@@ -5,8 +5,6 @@ import java.time.LocalDate;
 /**
  * Wrapper para LocalDate ser usado como chave na RedBlackBST.
  * Fornece métodos de comparação e igualdade para manipulação correta de datas.
- * 
- * @version 1.0
  */
 public class Date implements Comparable<Date> {
     /** Data armazenada internamente */

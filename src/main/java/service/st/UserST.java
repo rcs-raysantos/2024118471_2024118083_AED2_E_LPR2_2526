@@ -10,8 +10,6 @@ import java.util.List;
  * Tabela de Símbolos para a persistência de utilizadores baseada em Hash Table.
  * Utiliza o algoritmo de Separate Chaining para tratar colisões, permitindo
  * operações de inserção, remoção e procura com complexidade média de $O(1)$.
- * * @author O Teu Nome
- * @version 1.0
  */
 public class UserST {
     private SeparateChainingHashST<String, User> st; // estrutura: key = id, value = user

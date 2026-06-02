@@ -14,8 +14,6 @@ import java.util.UUID;
  * * Esta classe contém uma bateria de testes para validar as operações de
  * inserção, remoção, edição e consulta na Tabela de Símbolos de Artistas.
  * Utiliza asserções para garantir a integridade dos dados e o comportamento correto da estrutura.
- * * @author Rayssa Santos
- * @version 1.0
  */
 public class ArtistSTTest {
 

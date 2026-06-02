@@ -12,9 +12,6 @@ import java.util.List;
  * Classe responsável pelo arquivamento de entidades removidas do sistema.
  * Mantém um histórico de usuários, conteúdos e artistas removidos para auditoria
  * e possível recuperação futura.
- *
- * @author Seu Nome
- * @version 1.0
  */
 public class Archive {
     /** Lista de artistas arquivados */

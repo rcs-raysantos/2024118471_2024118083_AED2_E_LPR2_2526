@@ -10,8 +10,6 @@ import java.util.List;
  * Tabela de Símbolos para a persistência de artistas utilizando uma Hash Table.
  * Implementa a técnica de Separate Chaining para gestão de colisões, garantindo
  * operações de pesquisa, inserção e remoção altamente eficientes através do ID do artista.
- * * @author Rayssa Santos
- * @version 1.0
  */
 public class ArtistST {
     private final SeparateChainingHashST<String, Artist> st; // estrutura: key = id, value = artists

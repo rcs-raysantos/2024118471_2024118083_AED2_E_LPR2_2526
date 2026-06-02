@@ -10,8 +10,6 @@ import java.util.UUID;
 /**
  * Classe abstrata que representa uma pessoa no sistema (ator, diretor, etc).
  * Implementa a interface Identifiable para ter um ID único.
- * 
- * @version 1.0
  */
 public abstract class Person implements Identifiable, Serializable {
   private static final long serialVersionUID = 1L;

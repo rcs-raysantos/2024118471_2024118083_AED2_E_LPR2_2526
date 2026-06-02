@@ -11,14 +11,10 @@ import java.util.List;
  *
  * O UUID é gerado automaticamente no construtor de Genre.
  * A chave da BST é a data de criação do gênero.
- *
- * Correr com: java -ea tests.BST.GenreBSTTest
- *
- * @version 1.0
  */
 public class GenreBSTTest {
     public static void runAll() {
-        System.out.println("\n── GenreBSTTest ────────────────────────");
+        System.out.println("\n--------------------------- GenreBSTTest ---------------------------");
         testInsert();
         testInsertNull();
         testRemove();

@@ -2,8 +2,6 @@ package model.support;
 
 /**
  * Enumeração que define os tipos de gênero disponíveis no sistema.
- *
- * @version 1.0
  */
 public enum GenreType {
     /** Gênero de ação */
