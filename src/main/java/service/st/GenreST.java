@@ -10,9 +10,6 @@ import java.util.List;
  * Tabela de Símbolos para a persistência de gêneros baseada em Hash Table.
  * Utiliza o algoritmo de Separate Chaining para tratar colisões, permitindo
  * operações de inserção, remoção e procura com complexidade média de $O(1)$.
- *
- * @author Seu Nome
- * @version 1.0
  */
 public class GenreST {
     private final SeparateChainingHashST<String, Genre> st; // estrutura: key = id, value = genre

@@ -20,8 +20,6 @@ import java.util.List;
  * Classe de serviço que atua como uma Fachada (Facade) para a gestão de todas as entidades do sistema.
  * Centraliza as operações de CRUD (Create, Read, Update, Delete) para Utilizadores, Artistas e Conteúdos,
  * delegando a persistência de dados para as respetivas Symbol Tables (ST).
- * * @author O Teu Nome
- * @version 1.0
  */
 public class UserService {
 

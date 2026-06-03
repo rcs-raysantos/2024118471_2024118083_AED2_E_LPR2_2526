@@ -6,7 +6,17 @@ import service.st.GenreST;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Classe de testes para o serviço {@link GenreST}.
+ * Contém baterias de testes unitários que validam as operações de inserção,
+ * consulta, edição, remoção e listagem de géneros cinematográficos/conteúdo.
+ */
 public class GenreSTTest {
+
+    /**
+     * Executa sequencialmente toda a suite de testes da classe,
+     * imprimindo os resultados e mensagens de sucesso/erro no console.
+     */
     public static void runAll() {
         System.out.println("\n--------------------------- GenreSTTest ---------------------------");
         testInsert();
@@ -24,6 +34,11 @@ public class GenreSTTest {
 
     // --------------------------- INSERT ---------------------------
 
+    /**
+     * Valida o cenário padrão de inserção de registos válidos.
+     * Verifica se o tamanho do repositório aumenta corretamente e se os elementos
+     * inseridos podem ser encontrados através dos seus respetivos identificadores.
+     */
     private static void testInsert() {
         GenreST st = new GenreST();
 
@@ -44,6 +59,10 @@ public class GenreSTTest {
         System.out.println("testInsert() -> FEITO");
     }
 
+    /**
+     * Garante que a tentativa de inserção de um objeto duplicado (com o mesmo ID)
+     * seja intercetada pelo sistema através do lançamento de uma exceção.
+     */
     private static void testInsertDuplicado() {
         GenreST st = new GenreST();
 
@@ -58,6 +77,10 @@ public class GenreSTTest {
         }
     }
 
+    /**
+     * Testa o comportamento do sistema ao tentar inserir uma referência nula,
+     * esperando que uma exceção apropriada seja lançada.
+     */
     private static void testInsertNull() {
         GenreST st = buildST();
 
@@ -71,9 +94,13 @@ public class GenreSTTest {
 
     // --------------------------- GET ---------------------------
 
+    /**
+     * Verifica se a recuperação de um género existente através do seu identificador único
+     * funciona corretamente, validando a integridade dos dados retornados.
+     */
     private static void testGet() {
         GenreST st = buildST();
-        
+
         List<Genre> genres = st.listAll();
         Genre first = genres.get(0);
 
@@ -84,6 +111,10 @@ public class GenreSTTest {
         System.out.println("testGet() -> FEITO");
     }
 
+    /**
+     * Testa a busca por um identificador que não consta no repositório,
+     * confirmando que o retorno esperado para esta situação é nulo.
+     */
     private static void testGetInexistente() {
         GenreST st = buildST();
         String id_null = UUID.randomUUID().toString(); // um id que não existe na lista
@@ -95,6 +126,10 @@ public class GenreSTTest {
 
     // --------------------------- EDIT ---------------------------
 
+    /**
+     * Valida a alteração dos dados de um género previamente inserido, certificando-se
+     * de que os novos atributos foram guardados com sucesso na estrutura.
+     */
     private static void testEdit() {
         GenreST st = new GenreST();
 
@@ -109,6 +144,10 @@ public class GenreSTTest {
         System.out.println("testEdit() -> FEITO");
     }
 
+    /**
+     * Verifica o comportamento robusto do método de edição diante de cenários inválidos,
+     * como a passagem de objetos nulos ou modificações atreladas a identificadores fictícios.
+     */
     private static void testEditInexistente() {
         GenreST st = new GenreST();
         Genre genre = new Genre("Fantasy", List.of(), List.of());
@@ -135,6 +174,10 @@ public class GenreSTTest {
 
     // --------------------------- REMOVE ---------------------------
 
+    /**
+     * Valida o fluxo de remoção de um elemento por ID, assegurando que o elemento correspondente
+     * de facto deixa de existir na estrutura e que o tamanho geral é reduzido.
+     */
     private static void testRemove() {
         GenreST st = new GenreST();
 
@@ -152,6 +195,10 @@ public class GenreSTTest {
         System.out.println("testRemove() -> FEITO");
     }
 
+    /**
+     * Testa as restrições e tratamentos de erro ao tentar remover elementos nulos
+     * ou baseados em chaves de identificação que não foram previamente registadas.
+     */
     private static void testRemoveInexistente() {
         GenreST st = new GenreST();
 
@@ -174,6 +221,10 @@ public class GenreSTTest {
 
     // --------------------------- LIST ---------------------------
 
+    /**
+     * Verifica o método de listagem geral de dados num cenário preenchido, certificando-se
+     * de que o número total de itens devolvido condiz exatamento com o esperado.
+     */
     private static void testListAll() {
         GenreST st = buildST();
 
@@ -184,6 +235,10 @@ public class GenreSTTest {
         System.out.println("testListAll() -> FEITO");
     }
 
+    /**
+     * Valida se a listagem de uma estrutura recém-instanciada e sem dados
+     * é devolvida de forma segura como uma lista vazia.
+     */
     private static void testListAllVazia() {
         GenreST st = new GenreST();
 
@@ -195,6 +250,11 @@ public class GenreSTTest {
 
     // --------------------------- AUXILIARES ---------------------------
 
+    /**
+     * Método utilitário auxiliar configurado para gerar e pré-popular uma instância
+     * de {@link GenreST} com dados fictícios controlados para suporte aos testes de leitura.
+     * * @return Uma instância de {@link GenreST} carregada com quatro géneros base.
+     */
     static GenreST buildST() {
         GenreST st = new GenreST();
 
@@ -211,9 +271,5 @@ public class GenreSTTest {
         st.insert(genre4);
 
         return st;
-    }
-
-    public static void main(String[] args) {
-        runAll();
     }
 }

@@ -23,6 +23,12 @@ import model.graph.RelationType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador JavaFX encarregado de gerir a renderização e interação visual do grafo.
+ * Utiliza a biblioteca SmartGraph para mapear as interconexões entre utilizadores,
+ * conteúdos, artistas e géneros cinematográficos, oferecendo suporte a filtros bidirecionais
+ * e serialização de dados de rede.
+ */
 public class GraphController {
 
     @FXML private BorderPane graphContainer;
@@ -34,6 +40,11 @@ public class GraphController {
     private StreamingGraph streamingGraph;
     private SmartGraphPanel<String, String> smartGraphView;
 
+    /**
+     * Inicializa os controlos gráficos do ecossistema de grafos. Instancia o grafo de streaming,
+     * popula os critérios de filtragem de relacionamentos a partir do enumerador {@link RelationType},
+     * gera a teia de dados demonstrativos e agenda a primeira renderização visual da malha.
+     */
     @FXML
     public void initialize() {
         if (this.streamingGraph == null) {
@@ -57,6 +68,11 @@ public class GraphController {
         });
     }
 
+    /**
+     * Popula a estrutura interna em memória com uma massa inicial de vértices e arestas tipificadas.
+     * Insere utilizadores, produções, artistas e géneros e estabelece as conexões lógicas de rede
+     * como realização, atuação, consumo de media e avaliações de utilizador.
+     */
     private void carregarGrafoInicial() {
         try {
             // Adicionar Utilizadores (IDs idênticos aos do UserController)
@@ -115,6 +131,13 @@ public class GraphController {
         }
     }
 
+    /**
+     * Define externamente a referência da topologia de rede do grafo de streaming.
+     * Caso o contentor esteja pronto para exibição e contenha dados válidos, solicita
+     * de forma assíncrona o redesenho imediato do grafo.
+     *
+     * @param graph Instância do grafo de streaming a ser injetada.
+     */
     public void setStreamingGraph(StreamingGraph graph) {
         this.streamingGraph = graph;
         if (graphContainer != null && streamingGraph != null && streamingGraph.vertexCount() > 0) {
@@ -123,7 +146,8 @@ public class GraphController {
     }
 
     /**
-     * Desenha ou redesenha o grafo completo redefinindo as buscas
+     * Despoleta o desenho ou reposicionamento completo do grafo na interface.
+     * Invoca o mecanismo de desenho padrão limpando quaisquer restrições textuais ou filtros de aresta.
      */
     @FXML
     public void handleDesenhar() {
@@ -131,7 +155,8 @@ public class GraphController {
     }
 
     /**
-     * Captura os critérios da barra superior e reconstrói a Scene
+     * Captura os critérios inseridos nos inputs de filtro superiores e dispara o motor
+     * de reconstrução parcial do grafo com base nas restrições fornecidas.
      */
     @FXML
     public void handleFiltrarGrafo() {
@@ -142,7 +167,8 @@ public class GraphController {
     }
 
     /**
-     * Reseta os inputs textuais de pesquisa e reconstrói a malha limpa
+     * Limpa os inputs textuais e seleções dos critérios de pesquisa superiores
+     * e aciona o motor gráfico para restaurar a renderização integral da rede.
      */
     @FXML
     public void handleLimparFiltros() {
@@ -152,7 +178,13 @@ public class GraphController {
     }
 
     /**
-     * Centralizador da engine de renderização aplicando os filtros restritivos
+     * Motor centralizador de renderização e estruturação do grafo bidimensional.
+     * Filtra iterativamente arestas e nós em conformidade com as restrições introduzidas,
+     * constrói uma instância concreta de {@link GraphEdgeList}, injeta os elementos sob uma
+     * estratégia de distribuição circular ordenada e inicializa o painel visual.
+     *
+     * @param filtroVertice Rótulo de texto usado para filtrar IDs de nós (origem ou destino).
+     * @param filtroRelacao Nome específico do tipo de relacionamento (aresta) para filtragem exclusiva.
      */
     private void desenharGrafoFiltrado(String filtroVertice, String filtroRelacao) {
         if (streamingGraph == null || streamingGraph.vertexCount() == 0) {
@@ -226,6 +258,10 @@ public class GraphController {
         smartGraphView.init();
     }
 
+    /**
+     * Interrompe as rotinas de layout físico automático e desvincula
+     * por completo o painel do grafo do centro do container visual principal.
+     */
     @FXML
     public void handleLimpar() {
         if (smartGraphView != null) {
@@ -234,6 +270,11 @@ public class GraphController {
         graphContainer.setCenter(null);
     }
 
+    /**
+     * Exibe um explorador de ficheiros para leitura de um arquivo de texto (.txt),
+     * processa as linhas contendo a estrutura adjacente formatada linearmente por ponto e vírgula,
+     * reconstrói o grafo e renderiza a nova topologia.
+     */
     @FXML
     public void handleImportarDados() {
         FileChooser chooser = new FileChooser();
@@ -285,6 +326,10 @@ public class GraphController {
         }
     }
 
+    /**
+     * Varre as arestas presentes na estrutura e serializa de forma persistente
+     * os atributos de conexão (origem, destino, tipo e peso) em um ficheiro de texto externo.
+     */
     @FXML
     public void handleExportarDados() {
         if (streamingGraph == null || streamingGraph.edgeCount() == 0) {
@@ -317,6 +362,12 @@ public class GraphController {
         }
     }
 
+    /**
+     * Configura e gera uma janela modal de informação síncrona para feedback ao utilizador.
+     *
+     * @param titulo   O cabeçalho impresso na janela.
+     * @param mensagem O conteúdo principal descritivo.
+     */
     private void mostrarAlerta(String titulo, String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
@@ -325,6 +376,11 @@ public class GraphController {
         alert.showAndWait();
     }
 
+    /**
+     * Cria e retorna uma cópia de segurança instantânea (snapshot) de todas as arestas do grafo corrente.
+     *
+     * @return Uma nova lista contendo as instâncias de {@link GraphEdge}.
+     */
     public List<GraphEdge> getGraphEdgesSnapshot() {
         if (streamingGraph == null) {
             return new ArrayList<>();
@@ -332,6 +388,11 @@ public class GraphController {
         return new ArrayList<>(streamingGraph.edges());
     }
 
+    /**
+     * Cria e retorna uma cópia de segurança instantânea (snapshot) de todos os IDs de vértices do grafo.
+     *
+     * @return Uma nova lista de strings contendo os identificadores de vértices.
+     */
     public List<String> getGraphVerticesSnapshot() {
         if (streamingGraph == null) {
             return new ArrayList<>();
@@ -339,6 +400,13 @@ public class GraphController {
         return new ArrayList<>(streamingGraph.vertices());
     }
 
+    /**
+     * Limpa o grafo atual e reconstrói integralmente a malha estrutural de dados a partir das
+     * listas de instantâneos (snapshots) passadas por parâmetro, disparando a rotina de re-layout visual.
+     *
+     * @param vertices Lista contendo os identificadores de vértices para inserção.
+     * @param edges    Lista contendo os objetos de aresta estruturada para interconexão.
+     */
     public void loadGraphSnapshot(List<String> vertices, List<GraphEdge> edges) {
         StreamingGraph novoGrafo = new StreamingGraph();
 
@@ -357,10 +425,20 @@ public class GraphController {
         }
     }
 
+    /**
+     * Recupera o objeto de grafo de streaming atual em uso.
+     *
+     * @return A instância do modelo {@link StreamingGraph}.
+     */
     public StreamingGraph getStreamingGraphSnapshot() {
         return streamingGraph;
     }
 
+    /**
+     * Agenda assintoticamente a renderização do grafo. Garante que as dimensões do container na árvore
+     * JavaFX já foram calculadas e estão maiores que zero ou anexa escutadores de propriedade para atrasar
+     * a montagem gráfica até que o painel esteja redimensionado de forma correta.
+     */
     private void desenharQuandoPainelEstiverPronto() {
         Platform.runLater(() -> {
             if (graphContainer.getWidth() > 0 && graphContainer.getHeight() > 0) {
@@ -372,6 +450,10 @@ public class GraphController {
         });
     }
 
+    /**
+     * Método interno utilitário que atua como barreira de validação condicional nas propriedades de escuta,
+     * efetuando a renderização apenas se o container apresentar dimensões físicas válidas e estiver limpo.
+     */
     private void tentarDesenharGrafoImportado() {
         if (streamingGraph != null
                 && streamingGraph.vertexCount() > 0

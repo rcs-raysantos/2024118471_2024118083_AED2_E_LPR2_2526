@@ -12,9 +12,6 @@ import java.util.List;
  * Gestor de gêneros utilizando uma Árvore de Pesquisa Binária Balanceada (Red-Black BST).
  * Esta estrutura organiza os gêneros cronologicamente pela sua data de criação.
  * Permite realizar pesquisas por intervalos temporais e filtros nominais.
- *
- * @author Seu Nome
- * @version 1.0
  */
 public class GenreBST {
 

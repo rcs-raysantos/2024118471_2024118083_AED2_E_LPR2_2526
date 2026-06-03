@@ -8,8 +8,6 @@ import java.util.List;
 /**
  * Classe que armazena as preferências de um usuário.
  * As preferências incluem gêneros favoritos, idioma, classificação de maturidade e notificações.
- * 
- * @version 1.0
  */
 public class UserPreferences {
     /** Lista de gêneros preferidos pelo usuário */

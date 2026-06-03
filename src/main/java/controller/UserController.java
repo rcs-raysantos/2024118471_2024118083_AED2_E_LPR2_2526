@@ -18,11 +18,21 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador JavaFX responsável pela gestão lógica e visual dos utilizadores.
+ * Coordena as operações CRUD efetuadas na interface, a sincronização em tempo real
+ * com uma estrutura de dados de tabela de símbolos (Symbol Table) e com o grafo de
+ * conexões, além de tratar da importação/exportação de dados em lote.
+ */
 public class UserController {
     private UserST userST;
     private StreamingGraph streamingGraph;
 
-    // Lista auxiliar que o JavaFX usa para reagir e mostrar os dados na tabela
+    /**
+     * Lista auxiliar observável que encapsula o modelo de dados dos utilizadores.
+     * Utilizada como motor de vinculação (data binding) para atualizar automaticamente
+     * os componentes visuais da tabela do JavaFX diante de qualquer alteração estrutural.
+     */
     private ObservableList<User> obsUsers;
 
     // Painel de Filtros (Top)
@@ -46,6 +56,12 @@ public class UserController {
     @FXML private TextField txtFormRegiao;
     @FXML private DatePicker dpFormNascimento;
 
+    /**
+     * Inicializa os subsistemas e controlos da aba de utilizadores.
+     * Configura preventivamente as coleções de retaguarda, define as fábricas de células
+     * das colunas da tabela, estabelece listeners de seleção para preenchimento automático
+     * do formulário lateral de edição e injeta a massa de dados simulados de teste.
+     */
     @FXML
     public void initialize() {
         // Inicializar por segurança as estruturas para evitar NullPointerException
@@ -71,7 +87,9 @@ public class UserController {
     }
 
     /**
-     * Adiciona utilizadores de teste diretamente no sistema
+     * Popula o sistema com registos de teste codificados de forma nativa.
+     * Insere os utilizadores na Symbol Table, regista os seus identificadores únicos como
+     * vértices no grafo relacional partilhado e atualiza o estado de visualização da tabela.
      */
     private void carregarDadosIniciais() {
         try {
@@ -99,20 +117,30 @@ public class UserController {
     }
 
     /**
-     * Permite o Dashboard injetar a estrutura global do Grafo partilhada
+     * Permite à dashboard coordenadora injetar a topologia e a referência global partilhada
+     * do grafo de streaming de forma centralizada.
+     *
+     * @param graph Instância do grafo relacional do sistema.
      */
     public void setStreamingGraph(StreamingGraph graph) {
         this.streamingGraph = graph;
     }
 
     /**
-     * Permite o Dashboard injetar a Symbol Table partilhada
+     * Permite à dashboard coordenadora injetar uma instância global unificada da Symbol Table.
+     * Despoleta em sequência o recarregamento imediato dos registos na interface.
+     *
+     * @param userST A tabela de símbolos contendo os mapeamentos de utilizadores.
      */
     public void setUserST(UserST userST) {
         this.userST = userST;
         carregarDadosDoBackEnd();
     }
 
+    /**
+     * Mapeia as propriedades dos atributos do modelo {@link User} às respetivas colunas
+     * da {@link TableView}, estabelecendo invólucros observáveis de cadeias de caracteres e objetos de tempo.
+     */
     private void configurarColunas() {
         colId.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
         colNome.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
@@ -126,12 +154,22 @@ public class UserController {
         colRegisto.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRegistrationDate()));
     }
 
+    /**
+     * Sincroniza o estado atual da interface gráfica recuperando todos os utilizadores
+     * presentes na Symbol Table de suporte e reinjetando-os na lista observável vinculada.
+     */
     private void carregarDadosDoBackEnd() {
         if (userST != null) {
             obsUsers.setAll(userST.listAll());
         }
     }
 
+    /**
+     * Trata o processamento do botão de gravação. Valida o preenchimento dos campos textuais
+     * obrigatórios e bifurca a ação: se nenhum utilizador estiver selecionado na tabela, realiza
+     * a criação e inserção de um novo utilizador (acrescentando-o também ao grafo); caso contrário,
+     * atualiza mutavelmente os atributos do objeto selecionado na tabela de símbolos.
+     */
     @FXML
     public void handleSalvar() {
         if (userST == null) {
@@ -182,6 +220,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Executa a exclusão do utilizador atualmente selecionado na interface visual.
+     * Remove o registo mapeado na Symbol Table por ID e elimina o respetivo vértice e arestas
+     * associadas de forma síncrona na malha topológica do grafo.
+     */
     @FXML
     public void handleRemover() {
         User selecionado = tblUsers.getSelectionModel().getSelectedItem();
@@ -203,6 +246,11 @@ public class UserController {
         mostrarAlerta(Alert.AlertType.INFORMATION, "Removido", "Utilizador eliminado com sucesso.");
     }
 
+    /**
+     * Aplica uma filtragem linear multicritério cumulativa com base nos valores preenchidos na
+     * barra superior (filtragem parcial por nome, código da região e limites temporais de datas de registo).
+     * Os elementos aprovados sob as restrições reconstroem a grelha visual da tabela.
+     */
     @FXML
     public void handleFiltrar() {
         if (userST == null) return;
@@ -235,6 +283,10 @@ public class UserController {
         obsUsers.setAll(filtrados);
     }
 
+    /**
+     * Limpa os controlos gráficos de filtragem (campos de texto e seletores de data) e
+     * restaura a perspetiva integral de dados recuperados a partir da Symbol Table de suporte.
+     */
     @FXML
     public void handleLimparFiltros() {
         txtFiltroNome.clear();
@@ -244,6 +296,11 @@ public class UserController {
         carregarDadosDoBackEnd();
     }
 
+    /**
+     * Abre uma janela modal de seleção de arquivos (.txt) e executa o parsing linear das linhas.
+     * Extrai os dados tokenizados por ponto e vírgula, instancia os utilizadores sob parâmetros padronizados,
+     * atualiza de forma incremental a Symbol Table bem como o grafo e anexa os novos dados à tabela.
+     */
     @FXML
     public void handleImportarDados() {
         if (userST == null) this.userST = new UserST();
@@ -289,6 +346,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Trata o mecanismo de exportação massiva em ficheiro texto estruturado CSV.
+     * Varre sequencialmente os utilizadores ativos e grava em colunas separadas por ponto e vírgula
+     * os atributos de nome, correio eletrónico, credencial, código de região e string de nascimento.
+     */
     @FXML
     public void handleExportarDados() {
         if (userST == null || userST.listAll().isEmpty()) {
@@ -323,6 +385,12 @@ public class UserController {
         }
     }
 
+    /**
+     * Preenche os campos textuais e seletores de data do formulário de registo lateral com
+     * as propriedades do utilizador injetado por parâmetro, permitindo a sua modificação.
+     *
+     * @param user Instância da entidade utilizador cujos dados serão exibidos.
+     */
     private void preencherFormulario(User user) {
         txtFormNome.setText(user.getName());
         txtFormEmail.setText(user.getEmail());
@@ -331,6 +399,10 @@ public class UserController {
         dpFormNascimento.setValue(user.getBirthDate());
     }
 
+    /**
+     * Desmarca qualquer seleção ativa realizada na tabela gráfica e redefine as caixas de
+     * entrada de texto e de datas do formulário para o estado vazio.
+     */
     private void limparFormulario() {
         tblUsers.getSelectionModel().clearSelection();
         txtFormNome.clear();
@@ -340,6 +412,12 @@ public class UserController {
         dpFormNascimento.setValue(null);
     }
 
+    /**
+     * Cria e retorna um instantâneo (snapshot) em formato de lista simples contendo todos
+     * os utilizadores registados na memória do repositório Symbol Table.
+     *
+     * @return Uma lista de objetos {@link User} contendo os utilizadores do sistema.
+     */
     public List<User> getUsersSnapshot() {
         if (userST == null) {
             return new ArrayList<>();
@@ -347,6 +425,12 @@ public class UserController {
         return userST.listAll();
     }
 
+    /**
+     * Reinicializa o repositório da tabela de símbolos e reconstrói as referências adjacentes
+     * de vértices no grafo relacional partilhado com base em uma lista estruturada de instantâneo.
+     *
+     * @param users Lista de objetos {@link User} para carregamento massivo.
+     */
     public void loadUsersSnapshot(List<User> users) {
         this.userST = new UserST();
         this.streamingGraph = this.streamingGraph == null ? new StreamingGraph() : this.streamingGraph;
@@ -360,6 +444,13 @@ public class UserController {
         limparFormulario();
     }
 
+    /**
+     * Cria, configura e exibe de forma síncrona uma janela modal flutuante de alerta no ecrã.
+     *
+     * @param tipo    O nível estrutural de gravidade/tipo do alerta JavaFX.
+     * @param titulo  O título a ser impresso na borda superior do componente modular.
+     * @param msg     O corpo descritivo contendo a mensagem contextual de feedback.
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String msg) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

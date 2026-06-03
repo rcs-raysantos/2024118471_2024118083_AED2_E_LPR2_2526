@@ -5,8 +5,6 @@ import java.time.LocalDate;
 /**
  * Classe que representa uma série no sistema.
  * Uma série é um tipo de conteúdo com estéias e episódios.
- *
- * @version 1.0
  */
 public class Series extends Content {
 

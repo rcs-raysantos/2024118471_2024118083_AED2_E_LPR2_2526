@@ -5,8 +5,6 @@ import java.io.Serializable;
 /**
  * Classe que representa uma região/país no sistema.
  * Utiliza um código padronizado (ex: PT para Portugal) para facilitar comparações.
- * 
- * @version 1.0
  */
 public class Region implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ArtistBSTTest {
     public static void runAll() {
-        System.out.println("\n── ArtistBSTTest ───────────────────────");
+        System.out.println("\n--------------------------- ArtistBSTTest ---------------------------");
         testInsert();
         testRemove();
         testFindByBirthDateRange();

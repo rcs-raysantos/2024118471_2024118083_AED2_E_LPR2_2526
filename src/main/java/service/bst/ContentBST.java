@@ -12,8 +12,6 @@ import java.util.List;
  * Gestor de conteúdos multimédia utilizando uma Árvore de Pesquisa Binária Balanceada (Red-Black BST).
  * Esta estrutura organiza os conteúdos cronologicamente através da sua data de lançamento.
  * Permite a aplicação de filtros complexos (género, tipo, duração) e pesquisas por intervalos temporais.
- * * @author Rayssa Santos
- * @version 1.0
  */
 public class ContentBST {
 

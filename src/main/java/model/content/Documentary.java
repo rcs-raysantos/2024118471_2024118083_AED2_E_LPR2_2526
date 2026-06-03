@@ -5,8 +5,6 @@ import java.time.LocalDate;
 /**
  * Classe que representa um documentário no sistema.
  * Um documentário é um tipo de conteúdo com tópico e narrador específicos.
- *
- * @version 1.0
  */
 public class Documentary extends Content {
 

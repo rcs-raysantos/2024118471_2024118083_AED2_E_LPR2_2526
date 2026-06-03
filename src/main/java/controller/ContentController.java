@@ -23,6 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controlador JavaFX responsável pela gestão visual e lógica do catálogo de conteúdos.
+ * Coordena operações de criação, remoção, filtragem estrutural de cartões em um {@link TilePane}
+ * e a persistência de dados em arquivos de texto no formato CSV/tokenizado.
+ */
 public class ContentController {
     @FXML private TextField txtTituloContent;
     @FXML private TextField txtTituloRemoverContent;
@@ -31,6 +36,11 @@ public class ContentController {
     @FXML private ComboBox<String> cmbTipoContent;
     @FXML private TilePane tileContent;
 
+    /**
+     * Inicializa os controlos de interface associados ao FXML.
+     * Configura os valores de preenchimento do ComboBox de categorias e efetua o carregamento
+     * dos componentes visuais do catálogo inicial.
+     */
     @FXML
     public void initialize() {
         cmbTipoContent.getItems().addAll("Filme", "Série", "Documentário");
@@ -38,6 +48,10 @@ public class ContentController {
         carregarConteudosIniciais();
     }
 
+    /**
+     * Popula o contentor gráfico {@link TilePane} com um conjunto predefinido de cartões de conteúdo
+     * demonstrativos contendo filmes, séries e documentários.
+     */
     private void carregarConteudosIniciais() {
         tileContent.getChildren().addAll(
                 criarCartaoContent("The Shawshank Redemption", 1994, 142, "Filme"),
@@ -53,6 +67,11 @@ public class ContentController {
         );
     }
 
+    /**
+     * Trata a ação de inserção de um novo elemento no catálogo a partir do formulário FXML.
+     * Valida o preenchimento de strings vazias e analisa a coerência numérica do ano e da duração
+     * antes de anexar dinamicamente o novo cartão gráfico ao contentor.
+     */
     @FXML
     public void handleAdicionarContent() {
         String titulo = txtTituloContent.getText() != null ? txtTituloContent.getText().trim() : "";
@@ -80,6 +99,11 @@ public class ContentController {
         }
     }
 
+    /**
+     * Trata o pedido de remoção de um conteúdo por meio do título textual informado.
+     * Realiza uma varredura linear reflexiva nos nós do {@link TilePane}, extrai o identificador interno
+     * via lookup e, mediante confirmação do utilizador via janela modal, desanexa o componente da árvore visual.
+     */
     @FXML
     public void handleRemoverContent() {
         String tituloRemover = txtTituloRemoverContent.getText() != null ? txtTituloRemoverContent.getText().trim() : "";
@@ -122,6 +146,10 @@ public class ContentController {
         }
     }
 
+    /**
+     * Realiza a leitura e parsing estruturado de dados oriundos de um ficheiro de texto externo (.txt)
+     * selecionado pelo utilizador. Limpa o catálogo gráfico corrente e reconstrói a matriz visual de cartões.
+     */
     @FXML
     public void handleImportarDados() {
         FileChooser fileChooser = new FileChooser();
@@ -162,6 +190,10 @@ public class ContentController {
         }
     }
 
+    /**
+     * Captura os dados textuais embutidos nas sub-labels de cada cartão visível no {@link TilePane},
+     * serializa os atributos ordenadamente delimitados por ponto e vírgula e grava-os em formato de arquivo texto (.txt).
+     */
     @FXML
     public void handleExportarDados() {
         FileChooser fileChooser = new FileChooser();
@@ -201,6 +233,17 @@ public class ContentController {
         }
     }
 
+    /**
+     * Fábrica de componentes gráficos interna encarregada de estruturar um cartão visual customizado
+     * baseado no container {@link VBox}. Ajusta dinamicamente ícones, sufixos e folhas de estilo inline (CSS)
+     * com comportamento de efeito de realce (hover neon) conforme a categoria informada.
+     *
+     * @param titulo  O título textual descritivo do conteúdo.
+     * @param ano     O ano correspondente ao lançamento do registo.
+     * @param duracao A quantidade inteira representativa da duração de tempo/temporadas.
+     * @param tipo    O rótulo identificador do tipo ("Filme", "Série", "Documentário").
+     * @return Um container {@link VBox} completamente formatado e preparado para exibição em grelha.
+     */
     private VBox criarCartaoContent(String titulo, int ano, int duracao, String tipo) {
         Label lblIcone = new Label();
         lblIcone.setFont(Font.font("System", FontWeight.BOLD, 28));
@@ -278,6 +321,12 @@ public class ContentController {
         return cartao;
     }
 
+    /**
+     * Varre a árvore de nós visuais e constrói uma lista contendo objetos de transferência leves
+     * {@link ContentRecord} que representam o instantâneo (snapshot) atual do catálogo em memória.
+     *
+     * @return Uma lista de objetos {@link ContentRecord} correspondentes ao estado atual da interface.
+     */
     public List<ContentRecord> getContentRecordsSnapshot() {
         List<ContentRecord> records = new ArrayList<>();
 
@@ -302,6 +351,12 @@ public class ContentController {
         return records;
     }
 
+    /**
+     * Limpa o container visual principal e renderiza um novo conjunto de cartões com base na lista
+     * de instantâneos (snapshots) do modelo de persistência fornecida por parâmetro.
+     *
+     * @param records Uma lista de {@link ContentRecord} para reconstrução completa da visualização.
+     */
     public void loadContentRecordsSnapshot(List<ContentRecord> records) {
         tileContent.getChildren().clear();
         for (ContentRecord record : records) {
@@ -314,6 +369,13 @@ public class ContentController {
         }
     }
 
+    /**
+     * Inicializa, configura e exibe de forma síncrona uma janela modal ou caixa de diálogo de alerta no ecrã.
+     *
+     * @param tipo     O tipo estrutural de severidade do alerta gráfico.
+     * @param titulo   O título que será impresso na borda superior da janela de diálogo.
+     * @param mensagem O texto detalhado com o corpo principal da informação contextual.
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

@@ -10,8 +10,6 @@ import java.util.List;
  * Tabela de Símbolos para a persistência de conteúdos multimédia utilizando Hash Table.
  * Utiliza o algoritmo de Separate Chaining para resolver colisões, proporcionando
  * um acesso eficiente aos conteúdos através do seu identificador único (ID).
- * * @author Rayssa Santos
- * @version 1.0
  */
 public class ContentST {
     private final SeparateChainingHashST<String, Content> st; // estrutura: key = id, value = content

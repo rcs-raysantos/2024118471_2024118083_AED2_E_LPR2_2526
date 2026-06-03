@@ -12,8 +12,6 @@ import java.util.List;
  * Gestor de utilizadores baseado numa Árvore de Pesquisa Binária Balanceada (Red-Black BST).
  * Esta estrutura permite organizar os utilizadores por data de registo, facilitando
  * a pesquisa por intervalos temporais e a aplicação de filtros geográficos e nominais.
- * * @author Rayssa Santos
- * @version 1.0
  */
 public class UserBST {
     private RedBlackBST<Date, List<User>> bst; // chave: data, key: lista de usuarios

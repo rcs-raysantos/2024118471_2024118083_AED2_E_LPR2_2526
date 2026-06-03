@@ -16,6 +16,11 @@ import model.artists.Artist;
 import model.artists.Actor;
 import model.artists.Director;
 
+/**
+ * Controlador JavaFX responsável pela gestão da interface de artistas.
+ * Permite realizar operações de CRUD (criar, ler, atualizar e remover),
+ * filtragem dinâmica, e importação/exportação de dados em ficheiros de texto.
+ */
 public class ArtistController {
 
     private final List<Artist> baseDadosArtistas = new ArrayList<>();
@@ -33,6 +38,11 @@ public class ArtistController {
     @FXML private TextField txtFormArtistPais; // Mapeia para Nationality
     @FXML private ComboBox<String> cmbArtistTipo;
 
+    /**
+     * Inicializa os componentes da interface gráfica. Configura as opções do ComboBox,
+     * vincula as colunas da TableView às propriedades do modelo de dados, carrega os dados
+     * iniciais e adiciona um escutador de seleção para o preenchimento automático do formulário.
+     */
     @FXML
     public void initialize() {
         obsArtists = FXCollections.observableArrayList();
@@ -58,6 +68,10 @@ public class ArtistController {
         });
     }
 
+    /**
+     * Alimenta a base de dados em memória com instâncias de teste contendo atores e realizadores,
+     * promovendo a renderização inicial da tabela.
+     */
     private void carregarDadosIniciais() {
         // Criando instâncias de teste com os teus construtores exatos
         // (Nome, Género, DataNascimento, Nacionalidade, Agência/Estilo, ListaDeConteúdos)
@@ -68,10 +82,21 @@ public class ArtistController {
         atualizarTabela(baseDadosArtistas);
     }
 
+    /**
+     * Atualiza os elementos visuais da TableView substituindo o conteúdo atual
+     * da lista observável pela lista fornecida por parâmetro.
+     *
+     * @param lista A nova lista de artistas a ser exibida na tabela.
+     */
     private void atualizarTabela(List<Artist> lista) {
         obsArtists.setAll(lista);
     }
 
+    /**
+     * Trata o evento de salvamento dos dados do formulário. Caso nenhum artista esteja
+     * selecionado na tabela, cria uma nova instância (Actor ou Director) com os construtores
+     * padrões; caso contrário, atualiza os dados do registo selecionado.
+     */
     @FXML
     public void handleSalvar() {
         String nome = txtFormArtistNome.getText() != null ? txtFormArtistNome.getText().trim() : "";
@@ -105,13 +130,17 @@ public class ArtistController {
             // EDITAR ATRIBUTOS EXISTENTES
             selecionado.setName(nome);
             selecionado.setNationality(nacionalidade); // Ajustado para o teu set do modelo
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Dados atualizados com sucesso!");
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Dados updated com sucesso!");
         }
 
         atualizarTabela(baseDadosArtistas);
         limparFormulario();
     }
 
+    /**
+     * Trata o evento de remoção de um artista. Remove o objeto selecionado na TableView
+     * da lista principal e atualiza a interface. Exibe um aviso se nenhuma linha estiver selecionada.
+     */
     @FXML
     public void handleRemover() {
         Artist selecionado = tblArtists.getSelectionModel().getSelectedItem();
@@ -124,6 +153,10 @@ public class ArtistController {
         limparFormulario();
     }
 
+    /**
+     * Filtra a coleção de artistas com base nos valores textuais inseridos nos campos de pesquisa
+     * por nome e/ou país de origem, atualizando a visualização da tabela.
+     */
     @FXML
     public void handleFiltrar() {
         String filtroNome = txtFiltroArtistNome.getText() != null ? txtFiltroArtistNome.getText().trim().toLowerCase() : "";
@@ -141,6 +174,10 @@ public class ArtistController {
         atualizarTabela(filtrados);
     }
 
+    /**
+     * Limpa os campos de texto destinados aos filtros de pesquisa e restaura a listagem completa
+     * dos artistas na interface.
+     */
     @FXML
     public void handleLimparFiltros() {
         txtFiltroArtistNome.clear();
@@ -148,6 +185,10 @@ public class ArtistController {
         atualizarTabela(baseDadosArtistas);
     }
 
+    /**
+     * Abre uma janela de diálogo para seleção de um ficheiro de texto (.txt), limpa a coleção
+     * em memória e faz a importação estruturada do elenco com base nas linhas tokenizadas do ficheiro.
+     */
     @FXML
     public void handleImportarDados() {
         FileChooser fileChooser = new FileChooser();
@@ -189,6 +230,10 @@ public class ArtistController {
         }
     }
 
+    /**
+     * Permite a exportação do elenco atual em memória para um ficheiro de texto,
+     * gravando os atributos concatenados por ponto e vírgula de forma linear.
+     */
     @FXML
     public void handleExportarDados() {
         FileChooser fileChooser = new FileChooser();
@@ -224,6 +269,12 @@ public class ArtistController {
         }
     }
 
+    /**
+     * Preenche os inputs textuais e seleções de tipo do formulário de detalhe com os
+     * atributos de um artista selecionado para modificação.
+     *
+     * @param art Instância do artista que preencherá os campos do formulário.
+     */
     private void preencherFormulario(Artist art) {
         txtFormArtistNome.setText(art.getName());
         txtFormArtistPais.setText(art.getNationality());
@@ -235,6 +286,10 @@ public class ArtistController {
         }
     }
 
+    /**
+     * Restaura os controlos visuais de registo e edição do formulário para o estado vazio/padrão
+     * e limpa a seleção em destaque da tabela de visualização.
+     */
     private void limparFormulario() {
         tblArtists.getSelectionModel().clearSelection();
         txtFormArtistNome.clear();
@@ -242,10 +297,21 @@ public class ArtistController {
         cmbArtistTipo.setValue("Ator / Atriz");
     }
 
+    /**
+     * Cria e retorna uma cópia de segurança instantânea (snapshot) da lista de artistas armazenada em memória.
+     *
+     * @return Uma nova instância de {@link List} contendo os objetos de {@link Artist}.
+     */
     public List<Artist> getArtistsSnapshot() {
         return new ArrayList<>(baseDadosArtistas);
     }
 
+    /**
+     * Substitui integralmente a base de dados interna por uma lista externa fornecida,
+     * reatualizando a visualização de grelha associada e reiniciando o formulário.
+     *
+     * @param artists Nova lista completa de artistas para carregamento definitivo.
+     */
     public void loadArtistsSnapshot(List<Artist> artists) {
         baseDadosArtistas.clear();
         baseDadosArtistas.addAll(artists);
@@ -253,6 +319,13 @@ public class ArtistController {
         limparFormulario();
     }
 
+    /**
+     * Cria, configura e exibe de forma síncrona uma caixa de diálogo de alerta no ecrã.
+     *
+     * @param tipo   O tipo/severidade do alerta gráfico.
+     * @param titulo O título que será exibido no topo da janela do alerta.
+     * @param msg    A mensagem descritiva principal exibida no interior do alerta.
+     */
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String msg) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
