@@ -187,6 +187,36 @@ public class StreamingGraph implements Serializable {
     }
 
     /**
+     * Adiciona uma relação de seguimento entre dois utilizadores (Seguidor -> Seguido).
+     *
+     * @param follower Utilizador que segue.
+     * @param followed Utilizador a ser seguido.
+     */
+    public void addUserFollowsUser(User follower, User followed) {
+        requireEntity(follower, "Follower");
+        requireEntity(followed, "Followed");
+        addEdge(follower.getId(), followed.getId(), new EdgeMetadata(RelationType.USER_FOLLOWS, 1.0));
+    }
+
+    /**
+     * Remove a relação de seguimento entre dois utilizadores.
+     *
+     * @param followerId ID do seguidor.
+     * @param followedId ID do seguido.
+     */
+    public void removeUserFollowsUser(String followerId, String followedId) {
+        validateId(followerId);
+        validateId(followedId);
+        boolean removed = edges.removeIf(edge -> 
+            edge.getFrom().equals(followerId) && 
+            edge.getTo().equals(followedId) && 
+            edge.getMetadata().getType() == RelationType.USER_FOLLOWS);
+        if (removed) {
+            rebuildGraph();
+        }
+    }
+
+    /**
      * Adiciona uma ligação de atuação do tipo {@link RelationType#ACTOR_IN} estabelecendo o
      * vínculo profissional de participação de um artista no elenco de um conteúdo multimédia.
      *

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.FollowController" stylesheets="@style.css">
+    <children>
+        <BorderPane AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+            <top>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <padding><Insets bottom="10"/></padding>
+                    <Label text="Email do Utilizador:"/>
+                    <TextField fx:id="txtSearchEmail" promptText="exemplo@email.com" prefWidth="250"/>
+                    <Button text="Listar Seguidores" onAction="#handleListFollowing" styleClass="button-primary"/>
+                </HBox>
+            </top>
+            <center>
+                <TableView fx:id="tblFollowing">
+                    <columns>
+                        <TableColumn fx:id="colFollowingId" text="ID/Email" prefWidth="200"/>
+                        <TableColumn fx:id="colFollowingNome" text="Nome" prefWidth="300"/>
+                    </columns>
+                </TableView>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>

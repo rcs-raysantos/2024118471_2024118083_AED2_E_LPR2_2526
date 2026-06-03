@@ -253,17 +253,17 @@ public class ContentController {
 
         if (tipo.equalsIgnoreCase("Filme")) {
             lblIcone.setText("🎬");
-            corNeon = "#00a8e1";
+            corNeon = "#e74c3c"; // Vermelho Alizarina
             tipo = "Filme";
             sufixoDuracao = " min";
         } else if (tipo.equalsIgnoreCase("Série")) {
             lblIcone.setText("📺");
-            corNeon = "#2ecc71";
+            corNeon = "#c0392b"; // Vermelho Romã
             tipo = "Série";
             sufixoDuracao = " Temp";
         } else {
             lblIcone.setText("🌿");
-            corNeon = "#ff9900";
+            corNeon = "#ff7675"; // Vermelho suave / Coral
             tipo = "Documentário";
             sufixoDuracao = " min";
         }
