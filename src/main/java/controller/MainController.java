@@ -7,6 +7,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
 import model.artists.Artist;
 import model.users.User;
+import model.graph.StreamingGraph;
 import service.serialization.BinaryPersistence;
 import service.serialization.ContentRecord;
 import service.serialization.GraphSnapshot;
@@ -31,6 +32,8 @@ public class MainController {
     @FXML private ContentController contentViewController;
     @FXML private ArtistController artistViewController;
     @FXML private GraphController graphViewController;
+    @FXML private FollowersController followersViewController; // New controller for followers tab
+    @FXML private UserPreferencesController userPreferencesViewController; // New tab
 
     private final BinaryPersistence binaryPersistence = new BinaryPersistence();
 
@@ -43,6 +46,44 @@ public class MainController {
     public void initialize() {
         cmbFormatoPersistencia.getItems().addAll(FORMATO_TEXTO, FORMATO_BINARIO);
         cmbFormatoPersistencia.setValue(FORMATO_TEXTO);
+
+        // Sincroniza o Grafo entre os controladores assim que o programa inicia.
+        // Garantimos que ambos os controladores partilham a mesma INSTÂNCIA do grafo para que as alterações sejam imediatas.
+        StreamingGraph liveGraph = graphViewController.getStreamingGraphSnapshot();
+        userViewController.setStreamingGraph(liveGraph);
+        
+        // Injeta o UserService no ContentController
+        contentViewController.setUserService(userViewController.getUserService());
+        contentViewController.loadInitialContent(); // Carrega o conteúdo inicial após o serviço estar disponível
+
+        // Sincroniza a UserST com o GraphController para exibir nomes no grafo
+        graphViewController.setUserST(userViewController.getUserST());
+
+        if (followersViewController != null) {
+            followersViewController.setStreamingGraph(liveGraph);
+            followersViewController.setUserST(userViewController.getUserST());
+        }
+
+        if (userPreferencesViewController != null) {
+            userPreferencesViewController.setDependencies(liveGraph, userViewController.getUserST(), contentViewController.getContentRecordsSnapshot());
+        }
+
+        // Adiciona um listener para atualizar as abas dependentes (Followers e Graphs) quando selecionadas
+        mainTabs.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            if (newTab != null) {
+                String tabText = newTab.getText();
+                if (tabText.equals("Followers") && followersViewController != null) {
+                    followersViewController.refreshFollowersList();
+                } else if (tabText.equals("Preferências & Recs") && userPreferencesViewController != null) {
+                    userPreferencesViewController.updateContentList(contentViewController.getContentRecordsSnapshot());
+                    userPreferencesViewController.updateUserList();
+                    userPreferencesViewController.refreshData();
+                } else if (tabText.equals("Graphs") && graphViewController != null) {
+                    // Força o redesenho do grafo para refletir remoções ou adições de utilizadores
+                    graphViewController.handleDesenhar();
+                }
+            }
+        });
     }
 
     /**
@@ -132,6 +173,11 @@ public class MainController {
             switch (selectedIndex) {
                 case 0:
                     userViewController.loadUsersSnapshot((List<User>) object);
+                    // Re-sincroniza a ST de utilizadores com as abas dependentes após o carregamento
+                    if (followersViewController != null) {
+                        followersViewController.setUserST(userViewController.getUserST());
+                    }
+                    graphViewController.setUserST(userViewController.getUserST());
                     break;
                 case 1:
                     contentViewController.loadContentRecordsSnapshot((List<ContentRecord>) object);
@@ -142,7 +188,13 @@ public class MainController {
                 case 3:
                     GraphSnapshot graphSnapshot = (GraphSnapshot) object;
                     graphViewController.loadGraphSnapshot(graphSnapshot.getVertices(), graphSnapshot.getEdges());
-                    userViewController.setStreamingGraph(graphViewController.getStreamingGraphSnapshot());
+                    StreamingGraph importedGraph = graphViewController.getStreamingGraphSnapshot();
+                    userViewController.setStreamingGraph(importedGraph);
+                    if (followersViewController != null) {
+                        followersViewController.setStreamingGraph(importedGraph);
+                        followersViewController.setUserST(userViewController.getUserST());
+                    }
+                    graphViewController.setUserST(userViewController.getUserST());
                     break;
                 default:
                     mostrarAlerta(Alert.AlertType.WARNING, "Aviso", "Selecione uma aba para importar.");

@@ -60,9 +60,14 @@
 
                     <HBox alignment="CENTER" spacing="10">
                         <padding><Insets top="10" /></padding>
-                        <Button onAction="#handleSalvar" prefWidth="110" styleClass="button-primary" text="Salvar" />
-                        <Button onAction="#handleRemover" prefWidth="110" styleClass="button-danger" text="Remover" />
+                        <Button onAction="#handleSalvar" prefWidth="115" styleClass="button-primary" text="Salvar" />
+                        <Button onAction="#handleRemover" prefWidth="115" styleClass="button-secondary" text="Remover" />
                     </HBox>
+
+                    <Separator prefWidth="200.0" />
+                    <Label styleClass="label-header" text="Social" />
+                    <Button onAction="#handleFollow" maxWidth="Infinity" styleClass="button-primary" text="Seguir Utilizador" />
+                    <Button onAction="#handleUnfollow" maxWidth="Infinity" styleClass="button-secondary" text="Deixar de Seguir" />
                 </VBox>
             </right>
 

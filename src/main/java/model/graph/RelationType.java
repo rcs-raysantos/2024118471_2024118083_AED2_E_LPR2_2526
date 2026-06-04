@@ -42,5 +42,11 @@ public enum RelationType {
      * utilizador por uma categoria temática específica.
      * Conecta um vértice de Utilizador a um vértice de Género.
      */
-    USER_PREFERS_GENRE
+    USER_PREFERS_GENRE,
+
+    /**
+     * Conexão que indica que um utilizador segue outro utilizador.
+     * Conecta um vértice de Utilizador (seguidor) a outro vértice de Utilizador (seguido).
+     */
+    USER_FOLLOWS
 }

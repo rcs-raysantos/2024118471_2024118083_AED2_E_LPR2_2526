@@ -35,6 +35,18 @@
                             </content>
                         </Tab>
 
+                        <Tab text="Followers">
+                            <content>
+                                <fx:include fx:id="followersView" source="FollowersView.fxml" />
+                            </content>
+                        </Tab>
+
+                        <Tab text="Preferências &amp; Recs">
+                            <content>
+                                <fx:include fx:id="userPreferencesView" source="UserPreferencesView.fxml" />
+                            </content>
+                        </Tab>
+
                     </tabs>
                 </TabPane>
             </center>

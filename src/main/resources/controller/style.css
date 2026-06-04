@@ -46,10 +46,30 @@
 
 /* Linha Selecionada */
 .table-row-cell:selected {
-    -fx-background-color: #e0f2fe; /* Fundo azul claro céu para destacar */
+    -fx-background-color: #fee2e2; /* Fundo vermelho claro para destacar */
 }
 
 .table-row-cell:selected .table-cell {
-    -fx-text-fill: #0284c7; /* O texto ganha um azul vivo e profissional */
+    -fx-text-fill: #dc2626; /* O texto ganha um vermelho vivo e profissional */
     -fx-font-weight: bold;
+}
+
+.label-header {
+    -fx-text-fill: #b91c1c; /* Vermelho escuro */
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.button-primary {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.button-secondary {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
 }
