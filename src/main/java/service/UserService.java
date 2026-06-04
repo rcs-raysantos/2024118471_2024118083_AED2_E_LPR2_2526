@@ -3,6 +3,7 @@ package service;
 import model.artists.Artist;
 import model.content.Content;
 import model.content.Genre;
+import model.graph.StreamingGraph;
 import model.users.User;
 import service.archive.Archive;
 import service.bst.ArtistBST;
@@ -118,6 +119,50 @@ public class UserService {
      */
     public List<User> listUsers(){
         return userST.listAll();
+    }
+
+    /**
+     * Estabelece uma relação de seguimento entre dois utilizadores.
+     * @param followerId ID do utilizador que segue.
+     * @param followedId ID do utilizador seguido.
+     * @param graph O grafo relacional onde a ligação será injetada.
+     */
+    public void followUser(String followerId, String followedId, StreamingGraph graph) {
+        User follower = userST.get(followerId);
+        User followed = userST.get(followedId);
+
+        if (follower != null && followed != null && graph != null) {
+            graph.addUserFollowsUser(follower, followed);
+        }
+    }
+
+    /**
+     * Remove uma relação de seguimento entre dois utilizadores.
+     * @param followerId ID do seguidor.
+     * @param followedId ID do seguido.
+     * @param graph O grafo relacional.
+     */
+    public void unfollowUser(String followerId, String followedId, StreamingGraph graph) {
+        if (graph != null) {
+            graph.removeUserFollowsUser(followerId, followedId);
+        }
+    }
+
+    /**
+     * Encontra um utilizador pelo seu nome.
+     * @param name O nome do utilizador a procurar.
+     * @return O objeto User correspondente, ou null se não for encontrado.
+     */
+    public User findUserByName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return null;
+        }
+        for (User user : userST.listAll()) {
+            if (user.getName().equalsIgnoreCase(name.trim())) {
+                return user; // Retorna o primeiro utilizador com o nome correspondente
+            }
+        }
+        return null;
     }
 
     /**

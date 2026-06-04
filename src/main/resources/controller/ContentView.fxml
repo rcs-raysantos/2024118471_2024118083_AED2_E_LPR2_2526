@@ -4,44 +4,92 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContentController">
+<AnchorPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContentController">
     <children>
-        <BorderPane AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
-                <VBox spacing="10">
+                <HBox alignment="CENTER_LEFT" spacing="10" styleClass="toolbar">
                     <padding>
-                        <Insets bottom="15" left="5" right="5" top="5" />
+                        <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
                     <children>
-                        <Label styleClass="label-header" text="Catálogo de Conteúdos (Filmes / Séries / Documentários)" />
-                        <HBox alignment="CENTER_LEFT" spacing="10">
-                            <children>
-                                <TextField fx:id="txtTituloContent" prefWidth="230" promptText="Título do conteúdo" />
-                                <TextField fx:id="txtAnoContent" prefWidth="70" promptText="Ano" />
-                                <TextField fx:id="txtDuracaoContent" prefWidth="90" promptText="Duração/Temp" />
-                                <ComboBox fx:id="cmbTipoContent" prefWidth="130" promptText="Tipo" />
-                                <Button onAction="#handleAdicionarContent" styleClass="button-primary" text="Adicionar ao Catálogo" />
-                                <TextField fx:id="txtTituloRemoverContent" prefWidth="180" promptText="Título a remover" />
-                                <Button onAction="#handleRemoverContent" styleClass="button-secondary" text="Remover" />
-                            </children>
-                        </HBox>
+
+                        <Label text="Título:" />
+                        <TextField fx:id="txtFiltroTitulo" prefWidth="200" promptText="Procurar..." />
+
+                        <Label text="Tipo:" />
+                        <ComboBox fx:id="cmbFiltroTipo" prefWidth="150" />
+
+                        <Label text="Data de Lançamento:" />
+                        <TextField fx:id="txtFiltroAno" prefWidth="100" />
+
+                        <Button onAction="#handleFiltrar" text="Filtrar" />
+                        <Button onAction="#handleLimpar" text="Limpar" />
+
                     </children>
-                </VBox>
+                </HBox>
             </top>
-
             <center>
-                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #dce0e3; -fx-border-color: transparent;" BorderPane.alignment="CENTER">
-                    <content>
-                        <TilePane fx:id="tileContent" hgap="20" style="-fx-background-color: #fdfdfd;" vgap="20">
-                            <padding>
-                                <Insets bottom="10" left="10" right="10" top="10" />
-                            </padding>
-                        </TilePane>
-                    </content>
-                </ScrollPane>
-            </center>
+                <SplitPane dividerPositions="0.78">
 
+                    <items>
+                        <AnchorPane>
+                            <children>
+                                <TableView fx:id="tblContents" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <columns>
+                                        <TableColumn fx:id="colId" prefWidth="100" text="ID" />
+                                        <TableColumn fx:id="colTitulo" prefWidth="250" text="Título" />
+                                        <TableColumn fx:id="colTipo" prefWidth="120" text="Tipo" />
+                                        <TableColumn fx:id="colAno" prefWidth="100" text="Data de Lançamento" />
+                                        <TableColumn fx:id="colDuracao" prefWidth="120" text="Duração" />
+                                        <TableColumn fx:id="colRating" text="Avaliação" prefWidth="100"/>
+                                    </columns>
+                                </TableView>
+                            </children>
+                        </AnchorPane>
+
+                        <VBox prefWidth="280" spacing="10" styleClass="side-panel">
+
+                            <padding>
+                                <Insets bottom="15" left="15" right="15" top="15" />
+                            </padding>
+                            <children>
+                                <Label styleClass="label-header" text="Registar / Editar Conteúdo" />
+
+                                <Label text="Título:" />
+                                <TextField fx:id="txtTituloContent" />
+
+                                <Label text="Tipo:" />
+                                <ComboBox fx:id="cmbTipoContent" />
+
+                                <Label text="Ano:" />
+                                <TextField fx:id="txtAnoContent" />
+
+                                <Label text="Duração:" />
+                                <TextField fx:id="txtDuracaoContent" />
+
+                                <Label text="Avaliação:" />
+                                <TextField fx:id="txtRatingContent" />
+
+                                <Region VBox.vgrow="ALWAYS" />
+                                <HBox spacing="10">
+                                    <children>
+                                        <Button onAction="#handleAdicionarContent" prefWidth="120" text="Salvar" />
+                                        <Button onAction="#handleRemoverContent" prefWidth="120" text="Remover" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </items>
+                </SplitPane>
+            </center>
+            <bottom>
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                </HBox>
+            </bottom>
         </BorderPane>
     </children>
 </AnchorPane>

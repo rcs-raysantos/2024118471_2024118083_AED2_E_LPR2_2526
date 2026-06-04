@@ -11,6 +11,7 @@ import javafx.stage.FileChooser;
 import model.users.User;
 import model.utilities.Region;
 import model.graph.StreamingGraph;
+import service.UserService;
 import service.st.UserST;
 
 import java.io.*;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 public class UserController {
     private UserST userST;
+    private UserService userService;
     private StreamingGraph streamingGraph;
 
     /**
@@ -65,7 +67,8 @@ public class UserController {
     @FXML
     public void initialize() {
         // Inicializar por segurança as estruturas para evitar NullPointerException
-        this.userST = new UserST();
+        this.userService = new UserService();
+        this.userST = this.userService.getUserST(); // Sincroniza a ST com o Service
         this.streamingGraph = new StreamingGraph();
         this.obsUsers = FXCollections.observableArrayList();
 
@@ -135,6 +138,24 @@ public class UserController {
     public void setUserST(UserST userST) {
         this.userST = userST;
         carregarDadosDoBackEnd();
+    }
+
+    /**
+     * Retorna a Symbol Table de utilizadores ativa.
+     *
+     * @return A instância de UserST.
+     */
+    public UserST getUserST() {
+        return userST;
+    }
+
+    /**
+     * Retorna a instância do UserService.
+     *
+     * @return A instância de UserService.
+     */
+    public UserService getUserService() {
+        return userService;
     }
 
     /**
@@ -442,6 +463,68 @@ public class UserController {
 
         carregarDadosDoBackEnd();
         limparFormulario();
+    }
+
+    /**
+     * Trata o pedido para seguir um utilizador selecionado na tabela.
+     */
+    @FXML
+    public void handleFollow() {
+        User seguido = tblUsers.getSelectionModel().getSelectedItem();
+        if (seguido == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Seleção Necessária", "Selecione o utilizador que deseja seguir.");
+            return;
+        }
+        if (seguido == null) return;
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Seguir Utilizador");
+        dialog.setHeaderText("Seguir " + seguido.getName());
+        dialog.setContentText("Introduza o nome do seu perfil (seguidor):");
+
+        dialog.showAndWait().ifPresent(followerName -> {
+            User follower = userService.findUserByName(followerName.trim());
+            if (follower == null) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Utilizador seguidor '" + followerName + "' não encontrado.");
+                return;
+            }
+
+            if (follower.getId().equals(seguido.getId())) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não podes seguir-te a ti mesmo!");
+                return;
+            }
+            userService.followUser(follower.getId(), seguido.getId(), streamingGraph);
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Agora segues " + seguido.getName());
+        });
+    }
+
+    /**
+     * Remove a relação de seguimento entre o utilizador introduzido e o selecionado.
+     */
+    @FXML
+    public void handleUnfollow() {
+        User seguido = tblUsers.getSelectionModel().getSelectedItem();
+        if (seguido == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Seleção Necessária", "Selecione o utilizador.");
+            return;
+        }
+        if (seguido == null) return;
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Deixar de Seguir");
+        dialog.setHeaderText("Deixar de seguir " + seguido.getName());
+        dialog.setContentText("Introduza o nome do seu perfil (seguidor):");
+
+        dialog.showAndWait().ifPresent(followerName -> {
+            User follower = userService.findUserByName(followerName.trim());
+            if (follower == null) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Utilizador seguidor '" + followerName + "' não encontrado.");
+                return;
+            }
+
+            userService.unfollowUser(follower.getId(), seguido.getId(), streamingGraph);
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Deixaste de seguir " + seguido.getName());
+        });
     }
 
     /**

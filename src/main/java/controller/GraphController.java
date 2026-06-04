@@ -19,6 +19,8 @@ import model.graph.GraphEdge;
 import model.graph.StreamingGraph;
 import model.graph.EdgeMetadata;
 import model.graph.RelationType;
+import model.users.User;
+import service.st.UserST;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,7 @@ public class GraphController {
     @FXML private ComboBox<String> cmbFiltroRelacao;
 
     private StreamingGraph streamingGraph;
+    private UserST userST;
     private SmartGraphPanel<String, String> smartGraphView;
 
     /**
@@ -132,6 +135,24 @@ public class GraphController {
     }
 
     /**
+     * Define a referência para a Symbol Table de utilizadores, permitindo
+     * resolver IDs (emails) para nomes reais durante a renderização.
+     *
+     * @param userST A instância da Symbol Table de utilizadores.
+     */
+    public void setUserST(UserST userST) {
+        this.userST = userST;
+    }
+
+    private String getDisplayName(String id) {
+        if (userST != null && userST.contains(id)) {
+            User u = userST.get(id);
+            return u.getName(); // Alterado para mostrar apenas o nome do utilizador
+        }
+        return id;
+    }
+
+    /**
      * Define externamente a referência da topologia de rede do grafo de streaming.
      * Caso o contentor esteja pronto para exibição e contenha dados válidos, solicita
      * de forma assíncrona o redesenho imediato do grafo.
@@ -199,6 +220,9 @@ public class GraphController {
             String origem = edge.getFrom();
             String destino = edge.getTo();
             String tipoAresta = edge.getMetadata().getType().name();
+            
+            String displayOrigem = getDisplayName(origem);
+            String displayDestino = getDisplayName(destino);
 
             boolean matchRelacao = filtroRelacao.equals("TODOS") || tipoAresta.equalsIgnoreCase(filtroRelacao);
             boolean matchVertice = filtroVertice.isEmpty() ||
@@ -209,20 +233,20 @@ public class GraphController {
                 // Tenta inserir os vértices de forma segura.
                 // Se já existirem no modelo, o catch apanha e avança sem crashar a app.
                 try {
-                    graphModel.insertVertex(origem);
+                    graphModel.insertVertex(displayOrigem);
                 } catch (Exception e) {
                     // Ignora: o vértice já tinha sido inserido antes
                 }
 
                 try {
-                    graphModel.insertVertex(destino);
+                    graphModel.insertVertex(displayDestino);
                 } catch (Exception e) {
                     // Ignora: o vértice já tinha sido inserido antes
                 }
 
-                String labelUnica = origem + " -> " + destino + " (" + tipoAresta + ")";
+                String labelUnica = displayOrigem + " -> " + displayDestino + " (" + tipoAresta + ")";
                 try {
-                    graphModel.insertEdge(origem, destino, labelUnica);
+                    graphModel.insertEdge(displayOrigem, displayDestino, labelUnica);
                 } catch (Exception e) {
                     // Ignora colisões visuais duplicadas de arestas repetidas
                 }
@@ -235,12 +259,13 @@ public class GraphController {
                 // Verifica se o ID condiz com o filtro
                 if (vertexId.toLowerCase().contains(filtroVertice)) {
 
+                    String displayId = getDisplayName(vertexId);
                     // Procura na lista de vértices inseridos se já existe algum com este ID (String)
                     boolean jaExiste = graphModel.vertices().stream()
-                            .anyMatch(v -> v.element().equals(vertexId));
+                            .anyMatch(v -> v.element().equals(displayId));
 
                     if (!jaExiste) {
-                        graphModel.insertVertex(vertexId);
+                        graphModel.insertVertex(displayId);
                     }
                 }
             }

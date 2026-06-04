@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="controller.UserPreferencesController" stylesheets="@style.css">
+    <children>
+        <BorderPane AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+            <top>
+                <VBox spacing="10" style="-fx-padding: 0 0 15 0;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Utilizador:" styleClass="label-header"/>
+                        <ComboBox fx:id="cmbUserSelector" prefWidth="200" promptText="Selecionar utilizador..."/>
+                        
+                        <Separator orientation="VERTICAL" />
+
+                        <Label text="Atividade:" styleClass="label-header"/>
+                        <ComboBox fx:id="cmbContentSelector" prefWidth="180" promptText="Escolha o filme/série..."/>
+                        
+                        <Label text="Nota:"/>
+                        <Spinner fx:id="spnRating" prefWidth="70" editable="true"/>
+                        
+                        <Label text="Data:"/>
+                        <DatePicker fx:id="dpDate" prefWidth="130"/>
+                        
+                        <CheckBox fx:id="chkRecommend" text="Recomendo"/>
+                        
+                        <Button text="Registar" onAction="#handleAddActivity" styleClass="button-primary"/>
+                        <Button text="Refresh" onAction="#refreshData" styleClass="button-secondary"/>
+                    </HBox>
+                    <Separator/>
+                </VBox>
+            </top>
+            <center>
+                <VBox spacing="10">
+                    <Label text="Histórico de Atividade (Estilo Excel)" styleClass="label-header"/>
+                    <TableView fx:id="tblActivity" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colContent" text="Conteúdo" prefWidth="250"/>
+                            <TableColumn fx:id="colType" text="Interação" prefWidth="120"/>
+                            <TableColumn fx:id="colRating" text="Nota" prefWidth="80"/>
+                            <TableColumn fx:id="colRecommended" text="Recomenda?" prefWidth="100"/>
+                            <TableColumn fx:id="colDate" text="Data" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                    <Label text="Conteúdos Recomendados para Si" styleClass="label-header" style="-fx-padding: 10 0 0 0;"/>
+                    <TableView fx:id="tblRecommendations" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="colRecTitle" text="Título Sugerido" prefWidth="350"/>
+                            <TableColumn fx:id="colRecType" text="Categoria" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>
