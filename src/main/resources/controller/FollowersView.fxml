@@ -10,8 +10,8 @@
             <top>
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <padding><Insets bottom="10"/></padding>
-                    <Label text="Email do Utilizador (para ver seguidores):"/>
-                    <TextField fx:id="txtSearchEmail" promptText="exemplo@email.com" prefWidth="250"/>
+                    <Label text="Utilizador (para ver seguidores):"/>
+                    <TextField fx:id="txtSearchEmail" promptText="Nome" prefWidth="250"/>
                     <Button text="Listar Seguidores" onAction="#handleListFollowers" styleClass="button-primary"/>
                 </HBox>
             </top>

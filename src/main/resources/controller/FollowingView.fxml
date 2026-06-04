@@ -3,16 +3,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.FollowingController" stylesheets="@style.css">
     <children>
         <BorderPane AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
             <top>
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <padding><Insets bottom="10"/></padding>
-                    <Label text="Email do Utilizador:"/>
-                    <TextField fx:id="txtSearchEmail" promptText="exemplo@email.com" prefWidth="250"/>
-                    <Button text="Listar Seguidores" onAction="#handleListFollowing" styleClass="button-primary"/>
+                    <Label text="Utilizador:"/>
+                    <TextField fx:id="txtSearchEmail" promptText="Nome ou Email..." prefWidth="250"/>
+                    <Button text="Listar A Seguir" onAction="#handleListFollowing" styleClass="button-primary"/>
                 </HBox>
             </top>
             <center>

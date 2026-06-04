@@ -150,6 +150,15 @@ public class UserController {
     }
 
     /**
+     * Retorna a instância do UserService.
+     *
+     * @return A instância de UserService.
+     */
+    public UserService getUserService() {
+        return userService;
+    }
+
+    /**
      * Mapeia as propriedades dos atributos do modelo {@link User} às respetivas colunas
      * da {@link TableView}, estabelecendo invólucros observáveis de cadeias de caracteres e objetos de tempo.
      */
@@ -466,6 +475,7 @@ public class UserController {
             mostrarAlerta(Alert.AlertType.WARNING, "Seleção Necessária", "Selecione o utilizador que deseja seguir.");
             return;
         }
+        if (seguido == null) return;
 
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Seguir Utilizador");
@@ -498,6 +508,7 @@ public class UserController {
             mostrarAlerta(Alert.AlertType.WARNING, "Seleção Necessária", "Selecione o utilizador.");
             return;
         }
+        if (seguido == null) return;
 
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Deixar de Seguir");

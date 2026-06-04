@@ -52,6 +52,10 @@ public class MainController {
         StreamingGraph liveGraph = graphViewController.getStreamingGraphSnapshot();
         userViewController.setStreamingGraph(liveGraph);
         
+        // Injeta o UserService no ContentController
+        contentViewController.setUserService(userViewController.getUserService());
+        contentViewController.loadInitialContent(); // Carrega o conteúdo inicial após o serviço estar disponível
+
         // Sincroniza a UserST com o GraphController para exibir nomes no grafo
         graphViewController.setUserST(userViewController.getUserST());
 
