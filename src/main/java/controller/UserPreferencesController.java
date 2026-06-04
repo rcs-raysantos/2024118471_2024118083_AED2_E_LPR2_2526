@@ -98,7 +98,27 @@ public class UserPreferencesController {
 
     public void updateUserList() {
         if (userST != null) {
+            User current = cmbUserSelector.getValue();
             cmbUserSelector.setItems(FXCollections.observableArrayList(userST.listAll()));
+            if (current != null) cmbUserSelector.setValue(current);
+        }
+    }
+
+    /**
+     * Atualiza a lista de conteúdos disponíveis no seletor e no motor de recomendações.
+     */
+    public void updateContentList(List<ContentRecord> content) {
+        this.allContent = content;
+        if (cmbContentSelector != null && allContent != null) {
+            ContentRecord current = cmbContentSelector.getValue();
+            cmbContentSelector.setItems(FXCollections.observableArrayList(allContent));
+            // Tenta manter o conteúdo selecionado se ele ainda existir
+            if (current != null) {
+                allContent.stream()
+                        .filter(c -> c.getTitle().equals(current.getTitle()))
+                        .findFirst()
+                        .ifPresent(cmbContentSelector::setValue);
+            }
         }
     }
 

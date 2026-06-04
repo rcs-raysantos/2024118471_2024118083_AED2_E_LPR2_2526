@@ -71,6 +71,7 @@ public class MainController {
                 if (tabText.equals("Followers") && followersViewController != null) {
                     followersViewController.refreshFollowersList();
                 } else if (tabText.equals("Preferências & Recs") && userPreferencesViewController != null) {
+                    userPreferencesViewController.updateContentList(contentViewController.getContentRecordsSnapshot());
                     userPreferencesViewController.updateUserList();
                     userPreferencesViewController.refreshData();
                 } else if (tabText.equals("Graphs") && graphViewController != null) {

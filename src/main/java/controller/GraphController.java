@@ -147,7 +147,7 @@ public class GraphController {
     private String getDisplayName(String id) {
         if (userST != null && userST.contains(id)) {
             User u = userST.get(id);
-            return u.getName() + " (" + id + ")";
+            return u.getName(); // Alterado para mostrar apenas o nome do utilizador
         }
         return id;
     }

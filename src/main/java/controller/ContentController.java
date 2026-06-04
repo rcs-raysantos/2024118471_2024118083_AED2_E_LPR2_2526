@@ -33,6 +33,7 @@ public class ContentController {
     @FXML private TextField txtTituloRemoverContent;
     @FXML private TextField txtAnoContent;
     @FXML private TextField txtDuracaoContent;
+    @FXML private ComboBox<String> cmbContentSelector;
     @FXML private ComboBox<String> cmbTipoContent;
     @FXML private TilePane tileContent;
 
@@ -45,7 +46,19 @@ public class ContentController {
     public void initialize() {
         cmbTipoContent.getItems().addAll("Filme", "Série", "Documentário");
         cmbTipoContent.setValue("Filme");
-        carregarConteudosIniciais();
+
+        // Comentamos ou removemos o carregamento inicial para que o catálogo comece vazio
+        // e o utilizador possa adicionar manualmente ou importar de um ficheiro.
+        // carregarConteudosIniciais();
+
+        // Adiciona um listener para preencher os campos quando um item é selecionado no ComboBox
+        if (cmbContentSelector != null) {
+            cmbContentSelector.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null && !newValue.isEmpty()) {
+                    preencherDetalhesConteudo(newValue);
+                }
+            });
+        }
     }
 
     /**
@@ -65,6 +78,7 @@ public class ContentController {
                 criarCartaoContent("Top Gun: Maverick", 2022, 130, "Filme"),
                 criarCartaoContent("Oppenheimer", 2023, 180, "Filme")
         );
+        atualizarCmbContentSelector();
     }
 
     /**
@@ -89,6 +103,8 @@ public class ContentController {
             int duracao = Integer.parseInt(duracaoTexto);
 
             tileContent.getChildren().add(criarCartaoContent(titulo, ano, duracao, tipo));
+            // Garante que o ComboBox de seleção é atualizado assim que o novo item entra no TilePane
+            atualizarCmbContentSelector();
 
             txtTituloContent.clear();
             txtAnoContent.clear();
@@ -142,6 +158,7 @@ public class ContentController {
         Optional<ButtonType> resposta = confirmacao.showAndWait();
         if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
             tileContent.getChildren().remove(cartaoEncontrado);
+            atualizarCmbContentSelector();
             txtTituloRemoverContent.clear();
         }
     }
@@ -180,6 +197,7 @@ public class ContentController {
                         contador++;
                     }
                 }
+                atualizarCmbContentSelector();
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Importação Concluída",
                         "Sucesso! Foram importados " + contador + " conteúdos para o catálogo.");
             } catch (IOException e) {
@@ -367,6 +385,7 @@ public class ContentController {
                     record.getType()
             ));
         }
+        atualizarCmbContentSelector();
     }
 
     /**
@@ -382,5 +401,53 @@ public class ContentController {
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    /**
+     * Sincroniza o ComboBox de seleção de conteúdo (cmbContentSelector) com os títulos 
+     * presentes no catálogo visual (tileContent).
+     */
+    private void atualizarCmbContentSelector() {
+        if (cmbContentSelector == null) return;
+        cmbContentSelector.getItems().clear();
+        for (Node node : tileContent.getChildren()) {
+            if (node instanceof VBox) {
+                VBox cartao = (VBox) node;
+                Label lblTitulo = (Label) cartao.lookup("#idTitulo");
+                if (lblTitulo != null) {
+                    cmbContentSelector.getItems().add(lblTitulo.getText());
+                }
+            }
+        }
+    }
+
+    /**
+     * Preenche os campos de texto e o ComboBox de tipo com os detalhes do conteúdo selecionado.
+     *
+     * @param titulo O título do conteúdo selecionado no ComboBox.
+     */
+    private void preencherDetalhesConteudo(String titulo) {
+        for (Node node : tileContent.getChildren()) {
+            if (node instanceof VBox) {
+                VBox cartao = (VBox) node;
+                Label lblTitulo = (Label) cartao.lookup("#idTitulo");
+
+                // Verifica se o título do cartão corresponde ao título selecionado
+                if (lblTitulo != null && lblTitulo.getText().equalsIgnoreCase(titulo)) {
+                    Label lblAno = (Label) cartao.lookup("#idAno");
+                    Label lblDuracao = (Label) cartao.lookup("#idDuracao");
+                    Label lblTipo = (Label) cartao.lookup("#idTipo");
+
+                    if (lblAno != null && lblDuracao != null && lblTipo != null) {
+                        txtTituloContent.setText(lblTitulo.getText());
+                        txtAnoContent.setText(lblAno.getText().replace("Ano: ", "").trim());
+                        // Remove " min" ou " Temp" para obter apenas o valor numérico da duração
+                        txtDuracaoContent.setText(lblDuracao.getText().replaceAll("[^0-9]", ""));
+                        cmbTipoContent.setValue(lblTipo.getText());
+                        break; // Conteúdo encontrado e campos preenchidos, pode sair do loop
+                    }
+                }
+            }
+        }
     }
 }

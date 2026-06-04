@@ -7,7 +7,6 @@
 <AnchorPane stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ContentController">
     <children>
         <BorderPane AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-
             <top>
                 <VBox spacing="10">
                     <padding>
@@ -22,6 +21,7 @@
                                 <TextField fx:id="txtDuracaoContent" prefWidth="90" promptText="Duração/Temp" />
                                 <ComboBox fx:id="cmbTipoContent" prefWidth="130" promptText="Tipo" />
                                 <Button onAction="#handleAdicionarContent" styleClass="button-primary" text="Adicionar ao Catálogo" />
+                                <ComboBox fx:id="cmbContentSelector" prefWidth="150" promptText="Visualizar..." />
                                 <TextField fx:id="txtTituloRemoverContent" prefWidth="180" promptText="Título a remover" />
                                 <Button onAction="#handleRemoverContent" styleClass="button-secondary" text="Remover" />
                             </children>
@@ -41,7 +41,6 @@
                     </content>
                 </ScrollPane>
             </center>
-
         </BorderPane>
     </children>
 </AnchorPane>
