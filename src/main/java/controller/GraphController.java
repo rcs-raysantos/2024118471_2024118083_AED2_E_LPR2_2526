@@ -310,6 +310,7 @@ public class GraphController {
         if (file != null) {
             StreamingGraph novoGrafo = new StreamingGraph();
             int countArestas = 0;
+            int linhasComErro = 0;
 
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String javaLinha;
@@ -319,34 +320,75 @@ public class GraphController {
 
                     String[] tokens = javaLinha.split(";");
                     if (tokens.length >= 4) {
-                        String origem = tokens[0].trim();
-                        String destino = tokens[1].trim();
-                        String tipoStr = tokens[2].trim().toUpperCase();
-                        double peso = Double.parseDouble(tokens[3].trim());
+                        try {
+                            String orig = tokens[0].trim();
+                            String dest = tokens[1].trim();
 
-                        RelationType tipoEnum = RelationType.valueOf(tipoStr);
+                            String tipoStr = tokens[2].trim().toUpperCase()
+                                    .replace("SÉRIE", "SERIES")
+                                    .replace("SERIE", "SERIES")
+                                    .replace("FILME", "MOVIE")
+                                    .replace("DOCUMENTÁRIO", "DOCUMENTARY")
+                                    .replace("DOCUMENTARIO", "DOCUMENTARY");
 
-                        if (!novoGrafo.containsVertex(origem)) {
-                            novoGrafo.addVertex(origem);
+                            String pesoStr = tokens[3].trim().replace(",", ".");
+                            double peso = Double.parseDouble(pesoStr);
+
+                            RelationType tipoEnum = RelationType.valueOf(tipoStr);
+
+                            if (!novoGrafo.containsVertex(orig)) {
+                                novoGrafo.addVertex(orig);
+                            }
+                            if (!novoGrafo.containsVertex(dest)) {
+                                novoGrafo.addVertex(dest);
+                            }
+
+                            EdgeMetadata metadata = new EdgeMetadata(tipoEnum, peso);
+                            novoGrafo.addEdge(orig, dest, metadata);
+                            countArestas++;
+
+                        } catch (Exception e) {
+                            linhasComErro++;
                         }
-                        if (!novoGrafo.containsVertex(destino)) {
-                            novoGrafo.addVertex(destino);
-                        }
-
-                        EdgeMetadata metadata = new EdgeMetadata(tipoEnum, peso);
-                        novoGrafo.addEdge(origem, destino, metadata);
-                        countArestas++;
                     }
                 }
 
                 this.streamingGraph = novoGrafo;
-                handleDesenhar();
-                mostrarAlerta("Sucesso", "Grafo carregado!\nVértices: " + streamingGraph.vertexCount() + " | Arestas: " + countArestas);
 
-            } catch (IllegalArgumentException e) {
-                mostrarAlerta("Erro de Formato", "O ficheiro contém um Tipo de Relação inválido.");
-            } catch (Exception e) {
-                mostrarAlerta("Erro de Importação", "Falha ao processar o ficheiro:\n" + e.getMessage());
+                final int totalArestas = countArestas;
+                final int erros = linhasComErro;
+
+                javafx.application.Platform.runLater(() -> {
+                    try {
+                        if (graphContainer.getWidth() == 0 || graphContainer.getHeight() == 0) {
+                            System.out.println("Aviso: Painel a zeros. Aplicando dimensões mínimas de emergência.");
+                            graphContainer.setMinWidth(600);
+                            graphContainer.setMinHeight(400);
+
+                            if (graphContainer.getParent() != null) {
+                                graphContainer.getParent().requestLayout();
+                            }
+                        }
+
+                        handleDesenhar();
+
+                        String mensagemSucesso = "Grafo carregado com sucesso!\n" +
+                                "Vértices: " + streamingGraph.vertexCount() + "\n" +
+                                "Arestas: " + totalArestas;
+                        if (erros > 0) {
+                            mensagemSucesso += "\n(Aviso: " + erros + " linhas inválidas ignoradas.)";
+                        }
+                        mostrarAlerta("Sucesso", mensagemSucesso);
+
+                    } catch (Exception ex) {
+                        mostrarAlerta("Aviso de Inicialização",
+                                "O ficheiro foi importado logicamente, mas a interface gráfica ainda está a carregar.\n" +
+                                        "Clique no botão manual de 'Desenhar' do seu painel para renderizar os nós.");
+                        ex.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }

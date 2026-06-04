@@ -174,8 +174,6 @@ public class ContentController {
                 }
             }
         });
-
-        carregarConteudosIniciais();
     }
 
     /**
@@ -192,6 +190,13 @@ public class ContentController {
         adicionarConteudo("The Last of Us", LocalDate.of(2023, 1, 1),   1, "Série", 4.4f);
         adicionarConteudo("Top Gun: Maverick", LocalDate.of(2022, 1, 1), 130, "Filme", 4.1f);
         adicionarConteudo("Oppenheimer", LocalDate.of(2023, 1, 1), 180, "Filme", 4.5f);
+    }
+
+    /**
+     * Método público para carregar os conteúdos iniciais de teste.
+     */
+    public void loadInitialContent() {
+        carregarConteudosIniciais();
     }
 
     /**
