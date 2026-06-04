@@ -11,7 +11,7 @@ import javafx.stage.FileChooser;
 import model.users.User;
 import model.utilities.Region;
 import model.graph.StreamingGraph;
-import service.st.UserST;
+import service.UserService;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -25,7 +25,7 @@ import java.util.List;
  * conexões, além de tratar da importação/exportação de dados em lote.
  */
 public class UserController {
-    private UserST userST;
+    private UserService userService;
     private StreamingGraph streamingGraph;
 
     /**
@@ -35,13 +35,11 @@ public class UserController {
      */
     private ObservableList<User> obsUsers;
 
-    // Painel de Filtros (Top)
     @FXML private TextField txtFiltroNome;
     @FXML private TextField txtFiltroRegiao;
     @FXML private DatePicker dpInicio;
     @FXML private DatePicker dpFim;
 
-    // Tabela e Colunas (Center)
     @FXML private TableView<User> tblUsers;
     @FXML private TableColumn<User, String> colId;
     @FXML private TableColumn<User, String> colNome;
@@ -49,7 +47,6 @@ public class UserController {
     @FXML private TableColumn<User, String> colRegiao;
     @FXML private TableColumn<User, LocalDate> colRegisto;
 
-    // Formulário de Registo (Right)
     @FXML private TextField txtFormNome;
     @FXML private TextField txtFormEmail;
     @FXML private PasswordField txtFormSenha;
@@ -64,25 +61,19 @@ public class UserController {
      */
     @FXML
     public void initialize() {
-        // Inicializar por segurança as estruturas para evitar NullPointerException
-        this.userST = new UserST();
+        this.userService = new UserService();
         this.streamingGraph = new StreamingGraph();
         this.obsUsers = FXCollections.observableArrayList();
 
-        // Configura as regras de extração de dados para cada coluna da tabela
         configurarColunas();
-
-        // Associa a lista observável à tabela visual
         tblUsers.setItems(obsUsers);
 
-        // Ouve cliques de seleção na tabela para preencher o formulário lateral (Edição)
         tblUsers.getSelectionModel().selectedItemProperty().addListener((obs, antigo, selecionado) -> {
             if (selecionado != null) {
                 preencherFormulario(selecionado);
             }
         });
 
-        // CARREGA OS UTILIZADORES CHUMBADOS NO CÓDIGO PARA TESTES
         carregarDadosIniciais();
     }
 
@@ -97,19 +88,16 @@ public class UserController {
             User u2 = new User("Maria Sousa", "F", "maria@email.com", "abcde", LocalDate.now().minusDays(2), new Region("BR", "Brasil"), LocalDate.of(1998, 11, 12));
             User u3 = new User("John Doe", "M", "john@email.com", "qwerty", LocalDate.now(), new Region("US", "Estados Unidos"), LocalDate.of(1990, 1, 1));
 
-            // Insere na Symbol Table
-            userST.insert(u1);
-            userST.insert(u2);
-            userST.insert(u3);
+            userService.registerUser(u1);
+            userService.registerUser(u2);
+            userService.registerUser(u3);
 
-            // Sincroniza e insere no Grafo
             if (streamingGraph != null) {
                 streamingGraph.addVertex(u1.getId());
                 streamingGraph.addVertex(u2.getId());
                 streamingGraph.addVertex(u3.getId());
             }
 
-            // Atualiza a tabela visual
             carregarDadosDoBackEnd();
         } catch (Exception e) {
             System.out.println("Erro ao carregar dados simulados: " + e.getMessage());
@@ -130,10 +118,10 @@ public class UserController {
      * Permite à dashboard coordenadora injetar uma instância global unificada da Symbol Table.
      * Despoleta em sequência o recarregamento imediato dos registos na interface.
      *
-     * @param userST A tabela de símbolos contendo os mapeamentos de utilizadores.
+     * @param userService A tabela de símbolos contendo os mapeamentos de utilizadores.
      */
-    public void setUserST(UserST userST) {
-        this.userST = userST;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
         carregarDadosDoBackEnd();
     }
 
@@ -159,8 +147,8 @@ public class UserController {
      * presentes na Symbol Table de suporte e reinjetando-os na lista observável vinculada.
      */
     private void carregarDadosDoBackEnd() {
-        if (userST != null) {
-            obsUsers.setAll(userST.listAll());
+        if (userService != null && userService.getUserST() != null) {
+            obsUsers.setAll(userService.getUserST().listAll());
         }
     }
 
@@ -172,8 +160,8 @@ public class UserController {
      */
     @FXML
     public void handleSalvar() {
-        if (userST == null) {
-            this.userST = new UserST();
+        if (userService == null) {
+            this.userService = new UserService();
         }
 
         String nome = txtFormNome.getText();
@@ -195,7 +183,8 @@ public class UserController {
                 // Caso: NOVO UTILIZADOR
                 User novoUser = new User(nome, "Não Especificado", email, senha, LocalDate.now(), regiao, dataNasc);
 
-                userST.insert(novoUser);
+                userService.registerUser(novoUser);
+
                 if (streamingGraph != null) {
                     streamingGraph.addVertex(novoUser.getId());
                 }
@@ -208,7 +197,12 @@ public class UserController {
                 selecionado.setRegion(regiao);
                 selecionado.setBirthDate(dataNasc);
 
-                userST.insert(selecionado);
+                userService.getUserST().edit(selecionado.getId(), selecionado);
+                if(userService.getUserBST() != null) {
+                    userService.getUserBST().remove(selecionado);
+                    userService.getUserBST().insert(selecionado);
+                }
+
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Dados do utilizador atualizados!");
             }
 
@@ -233,8 +227,8 @@ public class UserController {
             return;
         }
 
-        if (userST != null) {
-            userST.remove(selecionado.getId());
+        if (userService != null) {
+            userService.removeUser(selecionado.getId());
         }
 
         if (streamingGraph != null && streamingGraph.containsVertex(selecionado.getId())) {
@@ -253,7 +247,7 @@ public class UserController {
      */
     @FXML
     public void handleFiltrar() {
-        if (userST == null) return;
+        if (userService == null || userService.getUserST() == null) return;
 
         String filtroNome = txtFiltroNome.getText() == null ? "" : txtFiltroNome.getText().toLowerCase().trim();
         String filtroRegiao = txtFiltroRegiao.getText() == null ? "" : txtFiltroRegiao.getText().toUpperCase().trim();
@@ -262,7 +256,7 @@ public class UserController {
 
         List<User> filtrados = new ArrayList<>();
 
-        for (User u : userST.listAll()) {
+        for (User u : userService.getUserST().listAll()) {
             boolean matchesNome = filtroNome.isEmpty() || u.getName().toLowerCase().contains(filtroNome);
             boolean matchesRegiao = filtroRegiao.isEmpty() || (u.getRegion() != null && u.getRegion().getCode().toUpperCase().contains(filtroRegiao));
 
@@ -303,7 +297,7 @@ public class UserController {
      */
     @FXML
     public void handleImportarDados() {
-        if (userST == null) this.userST = new UserST();
+        if (userService == null) this.userService = new UserService();
 
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Importar Utilizadores");
@@ -330,7 +324,8 @@ public class UserController {
                         Region regiao = new Region(codigoRegiao, codigoRegiao);
                         User u = new User(nome, "Não Especificado", email, senha, LocalDate.now(), regiao, dataNasc);
 
-                        userST.insert(u);
+                        // 11. ALTERADO: Importação em lote usando a regra de negócio correta do Service
+                        userService.registerUser(u);
                         if (streamingGraph != null) {
                             streamingGraph.addVertex(u.getId());
                         }
@@ -353,7 +348,7 @@ public class UserController {
      */
     @FXML
     public void handleExportarDados() {
-        if (userST == null || userST.listAll().isEmpty()) {
+        if (userService == null || userService.getUserST() == null || userService.getUserST().listAll().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Aviso", "Não existem utilizadores na tabela para exportar.");
             return;
         }
@@ -366,7 +361,7 @@ public class UserController {
 
         if (file != null) {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                for (User u : userST.listAll()) {
+                for (User u : userService.getUserST().listAll()) {
                     String codigoRegiao = u.getRegion() != null ? u.getRegion().getCode() : "GLOBAL";
                     String dataNascStr = u.getBirthDate() != null ? u.getBirthDate().toString() : LocalDate.now().toString();
 
@@ -419,10 +414,10 @@ public class UserController {
      * @return Uma lista de objetos {@link User} contendo os utilizadores do sistema.
      */
     public List<User> getUsersSnapshot() {
-        if (userST == null) {
+        if (userService == null || userService.getUserST() == null) {
             return new ArrayList<>();
         }
-        return userST.listAll();
+        return userService.getUserST().listAll();
     }
 
     /**
@@ -432,11 +427,11 @@ public class UserController {
      * @param users Lista de objetos {@link User} para carregamento massivo.
      */
     public void loadUsersSnapshot(List<User> users) {
-        this.userST = new UserST();
+        this.userService = new UserService();
         this.streamingGraph = this.streamingGraph == null ? new StreamingGraph() : this.streamingGraph;
 
         for (User user : users) {
-            userST.insert(user);
+            userService.registerUser(user);
             streamingGraph.addVertex(user.getId());
         }
 

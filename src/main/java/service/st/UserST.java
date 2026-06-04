@@ -1,6 +1,6 @@
 package service.st;
 
-import edu.princeton.cs.algs4.SeparateChainingHashST; // ordena alfabeticamente os ids
+import edu.princeton.cs.algs4.SeparateChainingHashST;
 import model.users.User;
 
 import java.util.ArrayList;
