@@ -58,15 +58,33 @@ public class ArtistST {
     /**
      * Atualiza os dados de um artista existente.
      * * @param id O identificador do artista a editar.
-     * @param uptaded_artist O objeto Artist com as novas informações.
+     * @param updated_artist O objeto Artist com as novas informações.
      * @throws IllegalArgumentException se o artista não existir na tabela.
      */
-    public void edit(String id, Artist uptaded_artist) {
+    public void edit(String id, Artist updated_artist) {
         if(!st.contains(id)){
             throw new IllegalArgumentException("artists does not exist: " + id);
         }
 
-        st.put(id, uptaded_artist);
+        if(updated_artist == null){
+            throw new IllegalArgumentException("artist can't be null");
+        }
+
+        Artist artistExistente = st.get(id);
+
+        if (updated_artist.getName() != null) {
+            artistExistente.setName(updated_artist.getName());
+        }
+
+        if (updated_artist.getNationality() != null) {
+            artistExistente.setNationality(updated_artist.getNationality());
+        }
+
+        if (updated_artist.getBirthDate() != null) {
+            artistExistente.setBirthDate(updated_artist.getBirthDate());
+        }
+
+        st.put(id, artistExistente);
     }
 
     /**

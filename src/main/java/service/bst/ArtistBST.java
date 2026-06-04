@@ -50,6 +50,25 @@ public class ArtistBST {
         bst.put(key, list_artist);
     }
 
+//    public void edit(Artist old_artist, Artist new_artist) {
+//        if(old_artist == null){
+//            throw new IllegalArgumentException("artist can't be null");
+//        }
+//
+//        if(new_artist == null){
+//            throw new IllegalArgumentException("artist can't be null");
+//        }
+//
+//        Date key = new Date(old_artist.getBirthDate());
+//        List<Artist> list_artist = bst.get(key);
+//        if (list_artist == null) {
+//            list_artist = new ArrayList<>();
+//        }
+//
+//        list_artist.remove(old_artist);
+//        list_artist.add(new_artist);
+//    }
+
     /**
      * Remove um artista específico da árvore.
      * Se a lista de artistas para aquela data de nascimento ficar vazia, a chave é removida da BST.
