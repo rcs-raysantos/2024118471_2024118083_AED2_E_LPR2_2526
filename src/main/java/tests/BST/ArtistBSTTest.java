@@ -182,9 +182,4 @@ public class ArtistBSTTest {
         bst.insert(new Director("Greta Gerwig", "F", LocalDate.of(1983, 8, 4), "US", "Drama/Comedy", List.of()));
         return bst;
     }
-
-    // ── MAIN ──────────────────────────────────────────────────────────
-    public static void main(String[] args) {
-        runAll();
-    }
 }

@@ -2,6 +2,9 @@ package service.st;
 
 import edu.princeton.cs.algs4.SeparateChainingHashST;
 import model.content.Content;
+import model.content.Documentary;
+import model.content.Movie;
+import model.content.Series;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +81,55 @@ public class ContentST {
             throw new IllegalArgumentException("content does not exist: " + id);
         }
 
-        st.put(id, uptaded_content);
+        if(uptaded_content == null){
+            throw new IllegalArgumentException("content can't be null");
+        }
+
+        Content contentExistente = st.get(id);
+
+        if (uptaded_content.getTitle() != null && !uptaded_content.getTitle().trim().isEmpty()) {
+            contentExistente.setTitle(uptaded_content.getTitle().trim());
+        }
+
+        if (uptaded_content.getReleaseDate() != null) {
+            contentExistente.setReleaseDate(uptaded_content.getReleaseDate());
+        }
+
+        if (uptaded_content.getDuration() > 0) {
+            contentExistente.setDuration(uptaded_content.getDuration());
+        }
+
+        if (uptaded_content.getSynopsis() != null) {
+            contentExistente.setSynopsis(uptaded_content.getSynopsis());
+        }
+
+        if (contentExistente instanceof Movie && uptaded_content instanceof Movie) {
+            Movie movieExistente = (Movie) contentExistente;
+            Movie movieNovo = (Movie) uptaded_content;
+
+            movieExistente.setBudget(movieNovo.getBudget());
+            movieExistente.setBoxOffice(movieNovo.getBoxOffice());
+
+        } else if (contentExistente instanceof Series && uptaded_content instanceof Series) {
+            Series seriesExistente = (Series) contentExistente;
+            Series seriesNova = (Series) uptaded_content;
+
+            seriesExistente.setSeasons(seriesNova.getSeasons());
+            seriesExistente.setEpisodes(seriesNova.getEpisodes());
+
+        } else if (contentExistente instanceof Documentary && uptaded_content instanceof Documentary) {
+            Documentary docExistente = (Documentary) contentExistente;
+            Documentary docNovo = (Documentary) uptaded_content;
+
+            if (docNovo.getTopic() != null) {
+                docExistente.setTopic(docNovo.getTopic());
+            }
+            if (docNovo.getNarrator() != null) {
+                docExistente.setNarrator(docNovo.getNarrator());
+            }
+        }
+
+        st.put(id, contentExistente);
     }
 
     // --------------------------- UTILIDADES ---------------------------

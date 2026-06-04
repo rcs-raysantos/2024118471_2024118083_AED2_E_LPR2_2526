@@ -118,10 +118,4 @@ public class GenreBSTTest {
 
         return bst;
     }
-
-    // ── MAIN ──────────────────────────────────────────────────────────
-
-    public static void main(String[] args) {
-        runAll();
-    }
 }

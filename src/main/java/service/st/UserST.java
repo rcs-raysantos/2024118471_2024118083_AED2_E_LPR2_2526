@@ -79,19 +79,37 @@ public class UserST {
     /**
      * Atualiza os dados de um utilizador existente.
      * * @param id O identificador do utilizador a editar.
-     * @param uptaded_user O objeto User com os dados atualizados.
+     * @param updated_user O objeto User com os dados atualizados.
      * @throws IllegalArgumentException se o utilizador não existir na tabela.
      */
-    public void edit(String id, User uptaded_user) {
+    public void edit(String id, User updated_user) {
         if(!st.contains(id)){
             throw new IllegalArgumentException("user does not exist: " + id);
         }
 
-        if(uptaded_user == null){
+        if(updated_user == null){
             throw new IllegalArgumentException("user can't be null");
         }
 
-        st.put(id, uptaded_user);
+        User userExistente = st.get(id);
+
+        if (updated_user.getName() != null) {
+            userExistente.setName(updated_user.getName());
+        }
+
+        if (updated_user.getEmail() != null) {
+            userExistente.setEmail(updated_user.getEmail());
+        }
+
+        if (updated_user.getPassword() != null) {
+            userExistente.setPassword(updated_user.getPassword());
+        }
+
+        if(updated_user.getBirthDate() != null) {
+            userExistente.setBirthDate(updated_user.getBirthDate());
+        }
+
+        st.put(id, userExistente);
     }
 
     public void clear() {

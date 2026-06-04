@@ -14,14 +14,6 @@ import static tests.DataInitializer.user_buildBST;
  * filtragem por região e buscas por substrings no nome.
  */
 public class UserBSTTest {
-
-    /**
-     * @brief Ponto de entrada para execução isolada dos testes da BST.
-     */
-    public static void main(String[] args) {
-        runAll();
-    }
-
     /**
      * @brief Executa toda a bateria de testes da UserBST.
      * * Invoca sequencialmente testes de inserção, remoção, pesquisas
