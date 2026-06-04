@@ -328,13 +328,11 @@ public class ContentController {
         File file = fileChooser.showOpenDialog(tblContents.getScene().getWindow());
 
         if (file != null) {
+            List<Content> conteudosLidos = new ArrayList<>();
+            int contador = 0;
+
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 String linha;
-                int contador = 0;
-
-                limparConteudosDoServico();
-                obsContents.clear();
-
                 while ((linha = br.readLine()) != null) {
                     linha = linha.trim();
                     if (linha.isEmpty()) continue;
@@ -345,23 +343,49 @@ public class ContentController {
                         int ano = Integer.parseInt(dados[1].trim());
                         int duracao = Integer.parseInt(dados[2].trim());
                         String tipo = dados[3].trim();
-                        float rating = (dados.length >= 5) ? Float.parseFloat(dados[4].trim()) : 0.0f;
 
+                        float rating = (dados.length >= 5) ? Float.parseFloat(dados[4].trim()) : 0.0f;
                         LocalDate dataLancamento = LocalDate.of(ano, 1, 1);
-                        adicionarConteudoTabela(titulo, dataLancamento, duracao, tipo, rating);
+
+                        Content content = criarModeloContent(titulo, dataLancamento, duracao, tipo);
+
+                        try {
+                            int score = Math.round(rating);
+                            if (score < 1) score = 1;
+                            if (score > 5) score = 5;
+                            content.rate(score);
+                        } catch (Exception ignored) {}
+
+                        conteudosLidos.add(content);
                         contador++;
+                    }
+                }
+
+                obsContents.clear();
+                limparConteudosDoServico();
+
+                if (userService != null) {
+                    for (Content c : conteudosLidos) {
+                        try {
+                            userService.registerContent(c);
+                        } catch (Exception e) {
+                            System.out.println("Erro ao registar no UserService: " + e.getMessage());
+                        }
                     }
                 }
 
                 if (userService != null && userService.getContentST() != null) {
                     obsContents.addAll(userService.getContentST().listAll());
+                } else {
+                    obsContents.addAll(conteudosLidos);
                 }
-                tblContents.refresh();
 
+                tblContents.refresh();
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Importação Concluída", "Foram importados " + contador + " conteúdos.");
 
             } catch (IOException | NumberFormatException e) {
-                mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Falha ao importar ficheiro: " + e.getMessage());
+                mostrarAlerta(Alert.AlertType.ERROR, "Erro de Leitura", "Falha ao processar as linhas do ficheiro: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
