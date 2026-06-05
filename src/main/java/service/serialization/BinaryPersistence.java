@@ -42,7 +42,7 @@ public class BinaryPersistence {
     public void save(SystemState state, File file) throws IOException {
         File parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
-            parent.mkdirs();
+            parent.mkdirs(); // cria pasta
         }
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {

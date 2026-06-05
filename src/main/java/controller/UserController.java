@@ -85,7 +85,6 @@ public class UserController {
             }
         });
 
-        // CARREGA OS UTILIZADORES CHUMBADOS NO CÓDIGO PARA TESTES
         carregarDadosIniciais();
     }
 
@@ -475,7 +474,6 @@ public class UserController {
             mostrarAlerta(Alert.AlertType.WARNING, "Seleção Necessária", "Selecione o utilizador que deseja seguir.");
             return;
         }
-        if (seguido == null) return;
 
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Seguir Utilizador");

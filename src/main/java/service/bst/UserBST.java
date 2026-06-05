@@ -189,7 +189,7 @@ public class UserBST {
         List<User> result = new ArrayList<>();
         String lower = sub == null ? "" : sub.toLowerCase(); // ? -> «sim» : -> «não»
 
-        for (Date d : bst.keys()) {
+        for (Date d : bst.keys(new Date(from), new Date(to))) {
             for(User u : bst.get(d)){
                 if((lower.isEmpty() || u.getName().toLowerCase().contains(lower))
                         && (region == null || region.equalsIgnoreCase(u.getRegion().getCode()))){
